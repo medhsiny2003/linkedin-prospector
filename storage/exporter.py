@@ -18,22 +18,33 @@ from storage.db_manager import db_manager
 class ExcelExporter:
     def __init__(self, output_path: Optional[Path] = None):
         self.output_path = output_path or config.OUTPUT_EXCEL_PATH
+        self.history_path = self.output_path.parent / "contacts_historique.xlsx"
 
     def archive_current_session_file(self) -> None:
         """
-        Déplace l'actuel contacts_stage.xlsx vers contacts_session_precedente.xlsx
-        au démarrage d'une nouvelle session, pour faire place nette à la nouvelle session.
+        Déplace l'actuel contacts_stage.xlsx vers contacts_historique.xlsx
+        au démarrage d'une nouvelle session, fusionne avec l'historique existant,
+        et réinitialise le fichier de session pour la nouvelle recherche.
         """
         import shutil
-        exports_dir = config.EXPORTS_DIR
-        exports_dir.mkdir(parents=True, exist_ok=True)
-        archive_path = exports_dir / "contacts_session_precedente.xlsx"
+        data_dir = self.output_path.parent
+        data_dir.mkdir(parents=True, exist_ok=True)
         main_path = self.output_path
+        history_path = self.history_path
 
         if main_path.exists() and main_path.stat().st_size > 1000:
             try:
-                shutil.copy2(str(main_path), str(archive_path))
-                audit_logger.log_event("SESSION_ARCHIVE", f"Session précédente archivée dans {archive_path.name}")
+                # Si un historique existe déjà, on sauvegarde la base globale cumulée
+                all_leads = db_manager.get_all_leads()
+                if all_leads:
+                    self.export_leads(all_leads, destination=history_path)
+                else:
+                    shutil.copy2(str(main_path), str(history_path))
+                
+                audit_logger.log_event("SESSION_ARCHIVE", f"Session précédente archivée dans {history_path.name}")
+                
+                # Réinitialisation du fichier de session actuelle
+                self.export_leads([], destination=main_path)
             except Exception as e:
                 audit_logger.log_event("SESSION_ARCHIVE_ERR", f"Erreur archivage : {e}")
 
@@ -171,27 +182,41 @@ class ExcelExporter:
     @staticmethod
     def list_export_history() -> List[Dict[str, Any]]:
         """
-        Retourne l'archive unique de la session précédente avec ses métadonnées.
+        Retourne l'archive globale et de la session précédente avec leurs métadonnées.
         """
         from datetime import datetime
-        exports_dir = config.EXPORTS_DIR
-        exports_dir.mkdir(parents=True, exist_ok=True)
-        archive_path = exports_dir / "contacts_session_precedente.xlsx"
+        results = []
+        data_dir = config.DATA_DIR
         
+        hist_path = data_dir / "contacts_historique.xlsx"
+        if hist_path.exists() and hist_path.stat().st_size > 0:
+            try:
+                stat = hist_path.stat()
+                dt = datetime.fromtimestamp(stat.st_mtime).strftime("%d/%m/%Y %H:%M")
+                results.append({
+                    "filename": "contacts_historique.xlsx (Base Cumulée)",
+                    "filepath": str(hist_path),
+                    "size_kb": round(stat.st_size / 1024, 1),
+                    "date": dt
+                })
+            except Exception:
+                pass
+
+        archive_path = config.EXPORTS_DIR / "contacts_session_precedente.xlsx"
         if archive_path.exists() and archive_path.stat().st_size > 0:
             try:
                 stat = archive_path.stat()
                 dt = datetime.fromtimestamp(stat.st_mtime).strftime("%d/%m/%Y %H:%M")
-                return [{
+                results.append({
                     "filename": "contacts_session_precedente.xlsx",
                     "filepath": str(archive_path),
-                    "date": dt,
                     "size_kb": round(stat.st_size / 1024, 1),
-                    "created_at": stat.st_mtime
-                }]
+                    "date": dt
+                })
             except Exception:
-                return []
-        return []
+                pass
+
+        return results
 
 
 excel_exporter = ExcelExporter()

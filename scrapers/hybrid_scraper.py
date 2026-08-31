@@ -49,6 +49,9 @@ class HybridScraper:
             f"Démarrage du pipeline hybride pour {len(target_companies)} entreprises et {len(target_titles)} postes."
         )
 
+        # 0. Rotation automatique : archivage de la session précédente vers contacts_historique.xlsx
+        excel_exporter.archive_current_session_file()
+
         # 1. Mode MCP exclusif (si activé)
         if self.use_mcp_only:
             audit_logger.log_event("PIPELINE_MCP", "Utilisation exclusive du serveur MCP configuré.")
