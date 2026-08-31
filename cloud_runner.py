@@ -65,11 +65,19 @@ async def main():
     print(f"[*] Zone géographique : {location}")
     print(f"[*] Limite par recherche : {max_per_search} profils\n")
     
-    # 3. Callback d'avancement
+    # 3. Callback d'avancement avec synchronisation Cloud incrémentale
+    found_in_cloud = 0
     def progress_callback(pct, msg, lead_data=None):
+        nonlocal found_in_cloud
         pct_int = int(pct * 100)
         lead_info = f" -> Nouveau contact : {lead_data.get('first_name')} {lead_data.get('last_name')} ({lead_data.get('company')})" if lead_data else ""
         print(f"[{pct_int}%] {msg}{lead_info}")
+        
+        if lead_data:
+            found_in_cloud += 1
+            # Synchronisation automatique vers Streamlit Cloud tous les 5 contacts
+            if found_in_cloud % 5 == 0:
+                os.system('git config user.name "Prospector Bot" && git config user.email "bot@local" && git add data/ 2>/dev/null && git commit -m "chore(auto): synchronisation 5 nouveaux leads [skip ci]" 2>/dev/null && git push origin main 2>/dev/null || true')
     
     # 4. Lancement du scraping et enrichissement
     try:
