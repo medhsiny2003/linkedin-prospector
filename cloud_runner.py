@@ -32,10 +32,20 @@ async def main():
     
     # 2. Chargement de la configuration active
     cfg = get_active_config()
-    companies = cfg.get("companies", config.TARGET_COMPANIES)
-    job_titles = cfg.get("job_titles", config.TARGET_JOB_TITLES)
-    location = cfg.get("location", config.TARGET_LOCATIONS[0] if config.TARGET_LOCATIONS else "France")
-    max_per_search = cfg.get("max_profiles", config.MAX_PROFILES_PER_SEARCH)
+    raw_companies = cfg.get("companies") or getattr(config, "TARGET_COMPANIES", ["Thales", "Safran", "Airbus", "Delair", "Dassault Aviation"])
+    if isinstance(raw_companies, str):
+        companies = [c.strip() for c in raw_companies.split(",") if c.strip()]
+    else:
+        companies = list(raw_companies)
+
+    raw_titles = cfg.get("job_titles") or getattr(config, "TARGET_JOB_TITLES", ["Ingénieur GNC", "Ingénieur Systèmes Embarqués", "RH", "Recruteur"])
+    if isinstance(raw_titles, str):
+        job_titles = [t.strip() for t in raw_titles.split(",") if t.strip()]
+    else:
+        job_titles = list(raw_titles)
+
+    location = str(cfg.get("location", "France") or "France")
+    max_per_search = int(cfg.get("max_contacts", cfg.get("max_profiles", 15)) or 15)
     
     print(f"\n[*] Cibles : {len(companies)} entreprises, {len(job_titles)} postes ciblés.")
     print(f"[*] Zone géographique : {location}")
