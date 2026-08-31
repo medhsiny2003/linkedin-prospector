@@ -89,17 +89,15 @@ class HybridScraper:
 
             is_auth = await auth_manager.authenticate(context, page, status_callback=auth_status_cb)
             if not is_auth:
-                audit_logger.log_event("PIPELINE_ABORT", "Échec d'authentification. Pipeline interrompu.")
-                report(0.15, "❌ Échec d'authentification. Veuillez vérifier votre connexion.")
-                return 0
+                audit_logger.log_event("XRAY_MODE_FALLBACK", "Session LinkedIn directe non active. Basculement transparent sur le Moteur X-Ray OSINT.")
+                report(0.18, "🌐 Mode Cloud / X-Ray Activé : Prospection OSINT via Google & Bing...")
+            else:
+                report(0.20, "Simulation de navigation naturelle sur LinkedIn...")
+                await linkedin_browser_scraper.perform_decoy_activity(page)
 
             if stop_check and stop_check():
-                report(0.15, "🛑 Prospection interrompue par l'utilisateur.")
+                report(0.20, "🛑 Prospection interrompue par l'utilisateur.")
                 return 0
-
-            # 4. Activité leurre (Decoy)
-            report(0.20, "Simulation de navigation naturelle sur LinkedIn...")
-            await linkedin_browser_scraper.perform_decoy_activity(page)
 
             # 5. Parcours des cibles
             total_combinations = max(len(target_companies) * len(target_titles), 1)

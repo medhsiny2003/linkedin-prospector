@@ -145,8 +145,9 @@ class AuthManager:
             except Exception as e:
                 audit_logger.log_event("AUTH_FILL_WARN", f"Saisie auto : {e}")
 
-        # Surveillance continue pendant que la page charge (jusqu'à 3 minutes)
-        for second in range(90):  # 90 x 2s = 180s
+        # Surveillance continue : courte en mode Cloud/Headless (6s) pour basculer vite sur X-Ray, plus longue en local avec interface (90s)
+        max_wait_iterations = 3 if getattr(config, "HEADLESS", False) or sys.platform != "win32" else 45
+        for second in range(max_wait_iterations):
             await asyncio.sleep(2)
             
             if await self.is_logged_in(page):
