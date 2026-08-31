@@ -1,0 +1,25 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*.class
+*.so
+.pytest_cache/
+
+# Environnement et Secrets
+.env
+*.env.local
+
+# Sessions de navigation et logs locaux
+data/sessions/
+data/leads.db
+data/leads.db-journal
+data/contacts_stage.xlsx
+data/exports/
+logs/*.log
+logs/*.json
+logs/audit.json
+
+# IDE
+.vscode/
+.idea/
+*.lnk

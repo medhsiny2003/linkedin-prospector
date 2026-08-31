@@ -1,0 +1,19 @@
+# Dépendances principales pour l'Assistant de Prospection LinkedIn (V3.1)
+playwright>=1.40.0
+playwright-stealth>=1.0.6
+curl-cffi>=0.5.0
+httpx>=0.27.0
+email-validator>=2.0.0
+dnspython>=2.6.0
+openpyxl>=3.1.0
+python-dotenv>=1.0.0
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+tzdata>=2024.1
+pytest>=8.0.0
+pytest-asyncio>=0.23.0
+
+# Interface Utilisateur (UI / Web)
+streamlit>=1.31.0
+pandas>=2.1.0
+plotly>=5.18.0

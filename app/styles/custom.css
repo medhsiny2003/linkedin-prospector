@@ -1,0 +1,156 @@
+/* ==============================================================================
+   Assistant de Prospection LinkedIn (V3.1) - Feuille de styles personnalisée
+   Palette : LinkedIn Blue (#0A66C2), Dark Slate (#191919), Off-White (#F3F6F8)
+   ============================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+html, body, [class*="css"] {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #191919;
+}
+
+/* En-têtes & Titres */
+h1, h2, h3, h4 {
+    font-weight: 700 !important;
+    color: #0A66C2 !important;
+}
+
+/* Cartes Métriques (KPI Cards) */
+.metric-card {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 20px 24px;
+    border: 1px solid #E0E4E8;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin-bottom: 16px;
+}
+
+.metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(10, 102, 194, 0.12);
+    border-color: #70B5F9;
+}
+
+.metric-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #666666;
+    margin-bottom: 6px;
+}
+
+.metric-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #0A66C2;
+    line-height: 1.2;
+}
+
+.metric-delta {
+    font-size: 0.82rem;
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+.metric-delta.positive {
+    color: #057642;
+}
+
+.metric-delta.neutral {
+    color: #666666;
+}
+
+/* Badges de Statut */
+.badge-status {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.badge-valide {
+    background-color: #E2EFDA;
+    color: #057642;
+    border: 1px solid #C5E0B4;
+}
+
+.badge-a-verifier {
+    background-color: #FFF2CC;
+    color: #B25E00;
+    border: 1px solid #FFE699;
+}
+
+.badge-non-verifiable {
+    background-color: #FCE4D6;
+    color: #B92B27;
+    border: 1px solid #F8CBAD;
+}
+
+/* Console de Logs en Direct */
+.log-console {
+    background-color: #1E222B;
+    color: #E6EDF3;
+    font-family: 'Consolas', 'Fira Code', monospace;
+    font-size: 0.85rem;
+    padding: 16px;
+    border-radius: 8px;
+    height: 320px;
+    overflow-y: auto;
+    border: 1px solid #30363D;
+    line-height: 1.5;
+}
+
+.log-entry {
+    margin-bottom: 4px;
+    word-break: break-all;
+}
+
+.log-info {
+    color: #70B5F9;
+}
+
+.log-warn {
+    color: #E68A00;
+}
+
+.log-error {
+    color: #FF7B72;
+}
+
+.log-success {
+    color: #7EE787;
+}
+
+/* Boutons d'Action Principaux */
+.stButton > button {
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease !important;
+}
+
+.primary-btn button {
+    background-color: #0A66C2 !important;
+    color: #FFFFFF !important;
+    border: none !important;
+}
+
+.primary-btn button:hover {
+    background-color: #004182 !important;
+    box-shadow: 0 4px 12px rgba(10, 102, 194, 0.3) !important;
+}
+
+/* Encadré d'Avertissement Sécurité */
+.security-card {
+    background-color: #FEF7EE;
+    border-left: 4px solid #E68A00;
+    padding: 14px 18px;
+    border-radius: 4px 8px 8px 4px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    color: #663C00;
+}
