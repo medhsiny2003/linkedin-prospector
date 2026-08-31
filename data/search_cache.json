@@ -10253,5 +10253,105 @@
         "domain": "orange.ma"
       }
     ]
+  },
+  "orange maroc___hr business partner___casablanca, rabat, benguerir, maroc": {
+    "timestamp": 1788158695.6489468,
+    "data": [
+      {
+        "first_name": "Olivier",
+        "last_name": "Mast",
+        "job_title": "Orange",
+        "company": "Orange Maroc",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://fr.linkedin.com/in/oliviermast",
+        "matched_keywords": "Orange Maroc, \"HR Business Partner\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "orange.ma"
+      },
+      {
+        "first_name": "Florian",
+        "last_name": "Duhin",
+        "job_title": "Senior Talent Acquisition Specialist",
+        "company": "Orange Maroc",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://fr.linkedin.com/in/florian-duhin-2757a199",
+        "matched_keywords": "Orange Maroc, \"HR Business Partner\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "orange.ma"
+      }
+    ]
+  },
+  "orange maroc___directeur r&d___casablanca, rabat, benguerir, maroc": {
+    "timestamp": 1788158699.4266298,
+    "data": [
+      {
+        "first_name": "Ziryeb",
+        "last_name": "Marouf",
+        "job_title": "Directeur Automatisation & IA Agentique ...",
+        "company": "Orange Maroc",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://fr.linkedin.com/in/ziryebmarouf",
+        "matched_keywords": "Orange Maroc, Directeur R&D (Yahoo Spider)",
+        "domain": "orange.ma"
+      },
+      {
+        "first_name": "Regan",
+        "last_name": "Derbre",
+        "job_title": "Directeur des opérations",
+        "company": "Orange Maroc",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://fr.linkedin.com/in/regan-derbre-3579a290",
+        "matched_keywords": "Orange Maroc, Directeur R&D (Yahoo Spider)",
+        "domain": "orange.ma"
+      },
+      {
+        "first_name": "Pascal",
+        "last_name": "Rigault",
+        "job_title": "Manager",
+        "company": "Orange Maroc",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://www.linkedin.com/in/pascal-rigault/fr",
+        "matched_keywords": "Orange Maroc, Directeur R&D (Yahoo Spider)",
+        "domain": "orange.ma"
+      },
+      {
+        "first_name": "Mohamed",
+        "last_name": "Bounaji",
+        "job_title": "Directeur Ressources Financières ...",
+        "company": "Orange Maroc",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/mohamed-bounaji-325366199",
+        "matched_keywords": "Orange Maroc, Directeur R&D (Yahoo Spider)",
+        "domain": "orange.ma"
+      },
+      {
+        "first_name": "Raoul",
+        "last_name": "Yobouet",
+        "job_title": "Orange",
+        "company": "Orange Maroc",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ci.linkedin.com/in/raoul-yobouet-553b7488",
+        "matched_keywords": "Orange Maroc, Directeur R&D (Yahoo Spider)",
+        "domain": "orange.ma"
+      },
+      {
+        "first_name": "Mohamed Habib",
+        "last_name": "Latrach",
+        "job_title": "Directeur des ressources humaines ...",
+        "company": "Orange Maroc",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://www.linkedin.com/in/mlatrach",
+        "matched_keywords": "Orange Maroc, Directeur R&D (Yahoo Spider)",
+        "domain": "orange.ma"
+      },
+      {
+        "first_name": "Kone",
+        "last_name": "Mouroulaye",
+        "job_title": "Directeur des Ressources Humaines chez ...",
+        "company": "Orange Maroc",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ci.linkedin.com/in/kone-mouroulaye-642a5715",
+        "matched_keywords": "Orange Maroc, Directeur R&D (Yahoo Spider)",
+        "domain": "orange.ma"
+      }
+    ]
   }
 }
