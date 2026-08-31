@@ -10003,5 +10003,80 @@
         "domain": "iam.ma"
       }
     ]
+  },
+  "maroc telecom___directeur r&d___casablanca, rabat, benguerir, maroc": {
+    "timestamp": 1788158667.0999768,
+    "data": [
+      {
+        "first_name": "Hassan",
+        "last_name": "Rachad",
+        "job_title": "CTO chez Maroc Telecom",
+        "company": "Maroc Telecom",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/hassan-rachad-809a70151",
+        "matched_keywords": "Maroc Telecom, Directeur R&D (Yahoo Spider)",
+        "domain": "iam.ma"
+      },
+      {
+        "first_name": "Mourad",
+        "last_name": "Hadraoui",
+        "job_title": "Directeur chez Maroc Telecom",
+        "company": "Maroc Telecom",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/mourad-hadraoui-65468384",
+        "matched_keywords": "Maroc Telecom, Directeur R&D (Yahoo Spider)",
+        "domain": "iam.ma"
+      },
+      {
+        "first_name": "Mounir",
+        "last_name": "Khaldi",
+        "job_title": "Directeur chez Maroc Telecom",
+        "company": "Maroc Telecom",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://www.linkedin.com/in/mounir-khaldi-b510a3161",
+        "matched_keywords": "Maroc Telecom, Directeur R&D (Yahoo Spider)",
+        "domain": "iam.ma"
+      },
+      {
+        "first_name": "Badr",
+        "last_name": "Eddaoudi",
+        "job_title": "Maroc Telecom",
+        "company": "Maroc Telecom",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/badr-eddaoudi-84783744",
+        "matched_keywords": "Maroc Telecom, Directeur R&D (Yahoo Spider)",
+        "domain": "iam.ma"
+      },
+      {
+        "first_name": "Zaki",
+        "last_name": "Lkhlifi",
+        "job_title": "Directeur général chez Maroc Telecom ...",
+        "company": "Maroc Telecom",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/zaki-lkhlifi-2938a4399",
+        "matched_keywords": "Maroc Telecom, Directeur R&D (Yahoo Spider)",
+        "domain": "iam.ma"
+      },
+      {
+        "first_name": "Mohamed Reda",
+        "last_name": "Hafid",
+        "job_title": "Maroc Telecom",
+        "company": "Maroc Telecom",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/mohamed-reda-hafid-4b72b829",
+        "matched_keywords": "Maroc Telecom, Directeur R&D (Yahoo Spider)",
+        "domain": "iam.ma"
+      },
+      {
+        "first_name": "Mohssine",
+        "last_name": "Hourmatallah",
+        "job_title": "Maroc Telecom",
+        "company": "Maroc Telecom",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/mohssine-hourmatallah",
+        "matched_keywords": "Maroc Telecom, Directeur R&D (Yahoo Spider)",
+        "domain": "iam.ma"
+      }
+    ]
   }
 }
