@@ -24,12 +24,15 @@ from core.worker.pipeline_worker import pipeline_worker
 from utils.data_processor import get_recent_leads
 from utils.state_manager import init_session_state
 
-st.set_page_config(
+try:
+    st.set_page_config(
     page_title="Prospection | LinkedIn Prospector V3.1",
     page_icon="📊",
     layout="wide",
     initial_sidebar_state="expanded"
 )
+except Exception:
+    pass
 
 # Chargement du style CSS
 css_path = APP_DIR / "styles" / "custom.css"

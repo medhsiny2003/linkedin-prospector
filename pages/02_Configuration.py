@@ -33,12 +33,15 @@ from utils.state_manager import (
     save_profile
 )
 
-st.set_page_config(
+try:
+    st.set_page_config(
     page_title="Configuration | LinkedIn Prospector V3.1",
     page_icon="⚙️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
+except Exception:
+    pass
 
 # Chargement du style CSS
 css_path = APP_DIR / "styles" / "custom.css"

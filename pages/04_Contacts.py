@@ -27,12 +27,15 @@ from utils.data_processor import delete_leads, get_all_leads_df
 from utils.export_helper import generate_excel_bytes
 from utils.state_manager import init_session_state
 
-st.set_page_config(
+try:
+    st.set_page_config(
     page_title="Contacts | LinkedIn Prospector V3.1",
     page_icon="📋",
     layout="wide",
     initial_sidebar_state="expanded"
 )
+except Exception:
+    pass
 
 # Chargement du style CSS
 css_path = APP_DIR / "styles" / "custom.css"

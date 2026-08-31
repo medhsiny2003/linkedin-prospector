@@ -38,12 +38,15 @@ from utils.data_processor import (
 )
 from utils.state_manager import init_session_state
 
-st.set_page_config(
+try:
+    st.set_page_config(
     page_title="Dashboard | LinkedIn Prospector V3.1",
     page_icon="🏠",
     layout="wide",
     initial_sidebar_state="expanded"
 )
+except Exception:
+    pass
 
 # Chargement du style CSS
 css_path = APP_DIR / "styles" / "custom.css"
