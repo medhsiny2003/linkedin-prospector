@@ -5,6 +5,7 @@ les dictionnaires de domaines connus et les patterns d'emails.
 """
 
 import os
+import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 from dotenv import load_dotenv
