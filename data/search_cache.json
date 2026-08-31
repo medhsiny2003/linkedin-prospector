@@ -9193,5 +9193,30 @@
         "domain": "safrangroup.com"
       }
     ]
+  },
+  "safran aero boosters___lead embedded engineer___international": {
+    "timestamp": 1788158208.3796093,
+    "data": [
+      {
+        "first_name": "Jean-Charles",
+        "last_name": "Bolard",
+        "job_title": "Safran",
+        "company": "Safran Aero Boosters",
+        "location": "International",
+        "profile_url": "https://fr.linkedin.com/in/jean-charles-bolard-087ab024",
+        "matched_keywords": "Safran Aero Boosters, \"Lead Embedded Engineer\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "safrangroup.com"
+      },
+      {
+        "first_name": "Ayoub",
+        "last_name": "Dkhissi",
+        "job_title": "Ingénieur Génie industriel",
+        "company": "Safran Aero Boosters",
+        "location": "International",
+        "profile_url": "https://fr.linkedin.com/in/ayoub-dkhissi-30631a227",
+        "matched_keywords": "Safran Aero Boosters, \"Lead Embedded Engineer\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "safrangroup.com"
+      }
+    ]
   }
 }
