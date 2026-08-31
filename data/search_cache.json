@@ -773,5 +773,75 @@
         "domain": "segulagrp.com"
       }
     ]
+  },
+  "segula maroc___ingénieur logiciel embarqué___casablanca, rabat, fès, maroc": {
+    "timestamp": 1788157270.6916184,
+    "data": [
+      {
+        "first_name": "Arnaud",
+        "last_name": "Mazière",
+        "job_title": "Recruteur",
+        "company": "SEGULA Technologies Maroc",
+        "location": "Casablanca, Rabat, Fès, Maroc",
+        "profile_url": "https://fr.linkedin.com/in/arnaud-maziere",
+        "matched_keywords": "SEGULA Technologies Maroc, \"Ingénieur Logiciel Embarqué\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "segulagrp.com"
+      }
+    ]
+  },
+  "segula maroc___data scientist___casablanca, rabat, fès, maroc": {
+    "timestamp": 1788157280.752008,
+    "data": [
+      {
+        "first_name": "Arnaud",
+        "last_name": "Mazière",
+        "job_title": "Recruteur",
+        "company": "SEGULA Technologies Maroc",
+        "location": "Casablanca, Rabat, Fès, Maroc",
+        "profile_url": "https://fr.linkedin.com/in/arnaud-maziere",
+        "matched_keywords": "SEGULA Technologies Maroc, \"Data Scientist\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "segulagrp.com"
+      }
+    ]
+  },
+  "segula maroc___chef de projet it___casablanca, rabat, fès, maroc": {
+    "timestamp": 1788157287.9905257,
+    "data": [
+      {
+        "first_name": "Arnaud",
+        "last_name": "Mazière",
+        "job_title": "Recruteur",
+        "company": "SEGULA Technologies Maroc",
+        "location": "Casablanca, Rabat, Fès, Maroc",
+        "profile_url": "https://fr.linkedin.com/in/arnaud-maziere",
+        "matched_keywords": "SEGULA Technologies Maroc, \"Chef de projet IT\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "segulagrp.com"
+      }
+    ]
+  },
+  "expleo maroc___talent acquisition specialist___casablanca, rabat, fès, maroc": {
+    "timestamp": 1788157294.1605918,
+    "data": [
+      {
+        "first_name": "Robert",
+        "last_name": "K.",
+        "job_title": "Senior Talent Acquisition specialist",
+        "company": "Expleo Maroc",
+        "location": "Casablanca, Rabat, Fès, Maroc",
+        "profile_url": "https://ie.linkedin.com/in/expleo",
+        "matched_keywords": "Expleo Maroc, \"Talent Acquisition Specialist\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "expleogroup.com"
+      },
+      {
+        "first_name": "Elisa",
+        "last_name": "Pellegatta",
+        "job_title": "Recruteuse spécialisée supply-chain",
+        "company": "Expleo Maroc",
+        "location": "Casablanca, Rabat, Fès, Maroc",
+        "profile_url": "https://fr.linkedin.com/in/elisa-pellegatta-recruteur-supply-ind%C3%A9pendante",
+        "matched_keywords": "Expleo Maroc, \"Talent Acquisition Specialist\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "expleogroup.com"
+      }
+    ]
   }
 }
