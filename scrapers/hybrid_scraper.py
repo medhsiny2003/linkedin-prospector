@@ -7,6 +7,7 @@ Prend en charge le contrôle d'exécution en direct (Pause, Reprise, Arrêt d'ur
 import asyncio
 import os
 import re
+import sys
 from typing import Callable, List, Optional
 from config import config
 from core.auth.auth_manager import auth_manager
