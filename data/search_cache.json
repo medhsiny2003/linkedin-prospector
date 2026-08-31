@@ -10868,5 +10868,60 @@
         "domain": "cdg.ma"
       }
     ]
+  },
+  "cdg___hr business partner___casablanca, rabat, benguerir, maroc": {
+    "timestamp": 1788158796.2302942,
+    "data": [
+      {
+        "first_name": "Olivier",
+        "last_name": "Camau",
+        "job_title": "Groupe Caisse des Dépôts",
+        "company": "Caisse de Dépôt et de Gestion (CDG)",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://fr.linkedin.com/in/olivier-camau",
+        "matched_keywords": "Caisse de Dépôt et de Gestion (CDG), \"HR Business Partner\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "cdg.ma"
+      },
+      {
+        "first_name": "Antoine",
+        "last_name": "Saintoyant",
+        "job_title": "Directeur de la Banque des Territoires ...",
+        "company": "Caisse de Dépôt et de Gestion (CDG)",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://fr.linkedin.com/in/antoine-saintoyant-999950297",
+        "matched_keywords": "Caisse de Dépôt et de Gestion (CDG), \"HR Business Partner\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "cdg.ma"
+      },
+      {
+        "first_name": "Fadilou",
+        "last_name": "Keïta",
+        "job_title": "Directeur général de la Caisse des Dépôts et ...",
+        "company": "Caisse de Dépôt et de Gestion (CDG)",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://sn.linkedin.com/in/fadilou-ke%C3%AFta-06183863",
+        "matched_keywords": "Caisse de Dépôt et de Gestion (CDG), \"HR Business Partner\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "cdg.ma"
+      },
+      {
+        "first_name": "Martin",
+        "last_name": "Lizotte",
+        "job_title": "Premier directeur",
+        "company": "Caisse de Dépôt et de Gestion (CDG)",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ca.linkedin.com/in/martin-lizotte-756810a",
+        "matched_keywords": "Caisse de Dépôt et de Gestion (CDG), \"HR Business Partner\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "cdg.ma"
+      },
+      {
+        "first_name": "Khalid",
+        "last_name": "Safir",
+        "job_title": "Directeur Général de la CDG (Caisse de ...",
+        "company": "Caisse de Dépôt et de Gestion (CDG)",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/khalid-safir-b9a057193",
+        "matched_keywords": "Caisse de Dépôt et de Gestion (CDG), \"HR Business Partner\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "cdg.ma"
+      }
+    ]
   }
 }
