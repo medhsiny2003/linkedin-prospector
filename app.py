@@ -1,5 +1,5 @@
 ﻿"""
-Point d'entree racine universel pour Hugging Face Spaces, Streamlit Cloud et local.
+Point d'entree racine universel pour Streamlit Community Cloud, Hugging Face Spaces et local.
 Initialise automatiquement les chemins, le style et redirige vers le Dashboard.
 """
 
@@ -16,10 +16,10 @@ for p in [str(PROJECT_ROOT), str(APP_DIR)]:
     if p not in sys.path:
         sys.path.insert(0, p)
 
-# Installation automatique de Chromium pour Playwright en environnement Linux / Hugging Face Spaces
+# Installation automatique et silencieuse de Chromium pour Playwright en environnement Linux / Cloud
 if sys.platform != "win32" and not os.path.exists("/tmp/.playwright_installed"):
     try:
-        subprocess.run(["playwright", "install", "chromium"], check=False)
+        subprocess.run([sys.executable, "-m", "playwright", "install", "chromium"], check=False)
         with open("/tmp/.playwright_installed", "w") as f:
             f.write("1")
     except Exception:
