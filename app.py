@@ -50,9 +50,9 @@ render_sidebar()
 
 # Redirection automatique vers la page Dashboard
 try:
-    st.switch_page("app/pages/01_Dashboard.py")
+    st.switch_page("pages/01_Dashboard.py")
 except Exception:
     try:
-        st.switch_page("pages/01_Dashboard.py")
+        st.switch_page("app/pages/01_Dashboard.py")
     except Exception:
         pass
