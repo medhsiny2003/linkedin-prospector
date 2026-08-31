@@ -250,30 +250,50 @@ if is_job_running or worker_status["logs"]:
         time.sleep(1.5)
         st.rerun()
 
-# Affichage permanent des derniers contacts dans la base de données (10 par 10)
+# Affichage permanent des derniers contacts dans la base de données (10 par 10) avec actualisation et téléchargement direct
 st.markdown("<hr style='margin: 25px 0; border-color: #E0E4E8;'/>", unsafe_allow_html=True)
-st.markdown("### 📋 10 Derniers Contacts Enregistrés dans la Base SQLite")
-recent_df = get_recent_leads(limit=10)
-if not recent_df.empty:
-    st.dataframe(
-        recent_df,
-        column_config={
-            "first_name": "Prénom",
-            "last_name": "Nom",
-            "job_title": "Poste",
-            "company": "Entreprise",
-            "proposed_email": "Email (Proposé)",
-            "confidence_score": st.column_config.ProgressColumn(
-                "Confiance",
-                format="%d%%",
-                min_value=0,
-                max_value=100
-            ),
-            "status": "Statut MX",
-            "profile_url": st.column_config.LinkColumn("Profil LinkedIn", display_text="Ouvrir")
-        },
-        use_container_width=True,
-        hide_index=True
-    )
-else:
-    st.info("Aucun contact pour le moment. Cliquez sur '🚀 Lancer la Prospection' ci-dessus.")
+
+@st.fragment(run_every=6)
+def render_live_contacts_section():
+    head_c1, head_c2 = st.columns([7, 3])
+    recent_df = get_recent_leads(limit=15)
+    with head_c1:
+        st.markdown(f"### 📋 Derniers Contacts Enregistrés dans la Base SQLite ({len(recent_df)})")
+    with head_c2:
+        if not recent_df.empty:
+            from utils.export_helper import generate_excel_bytes
+            excel_bytes = generate_excel_bytes(recent_df)
+            st.download_button(
+                label="📥 Télécharger Excel (.xlsx)",
+                data=excel_bytes,
+                file_name="contacts_stage.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                type="primary",
+                use_container_width=True
+            )
+
+    if not recent_df.empty:
+        st.dataframe(
+            recent_df,
+            column_config={
+                "first_name": "Prénom",
+                "last_name": "Nom",
+                "job_title": "Poste",
+                "company": "Entreprise",
+                "proposed_email": "Email (Proposé)",
+                "confidence_score": st.column_config.ProgressColumn(
+                    "Confiance",
+                    format="%d%%",
+                    min_value=0,
+                    max_value=100
+                ),
+                "status": "Statut MX",
+                "profile_url": st.column_config.LinkColumn("Profil LinkedIn", display_text="Ouvrir")
+            },
+            use_container_width=True,
+            hide_index=True
+        )
+    else:
+        st.info("Aucun contact pour le moment. Lancez une prospection ci-dessus pour alimenter la base.")
+
+render_live_contacts_section()
