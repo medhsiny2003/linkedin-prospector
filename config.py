@@ -106,11 +106,13 @@ class AppConfig(BaseSettings):
     )
 
     # --- Chemins de stockage ---
+    DATA_DIR: Path = Field(default_factory=lambda: BASE_DIR / "data")
     SESSION_PATH: Path = Field(default_factory=lambda: BASE_DIR / "data" / "sessions" / "linkedin_profile")
     DATABASE_PATH: Path = Field(default_factory=lambda: BASE_DIR / "data" / "leads.db")
     OUTPUT_EXCEL_PATH: Path = Field(default_factory=lambda: BASE_DIR / "data" / "contacts_stage.xlsx")
     EXPORTS_DIR: Path = Field(default_factory=lambda: BASE_DIR / "data" / "exports")
     AUDIT_LOG_PATH: Path = Field(default_factory=lambda: BASE_DIR / "logs" / "audit.json")
+    EXECUTION_MODE: str = Field(default_factory=lambda: os.getenv("EXECUTION_MODE", "cloud" if sys.platform != "win32" else "local"))
 
     # --- Recherche par Défaut (Drones & Systèmes Embarqués en France) ---
     DEFAULT_COMPANIES: List[str] = [

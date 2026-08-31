@@ -47,6 +47,7 @@ jobs:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           LINKEDIN_COOKIE: ${{ secrets.LINKEDIN_COOKIE }}
           TARGET_PROFILE: ${{ inputs.target_profile || '🇲🇦 Maroc - Ingénierie, Tech, IA & ESN (Casablanca / Rabat / Fès)' }}
+          EXECUTION_MODE: "cloud"
           HEADLESS: "true"
           MAX_PROFILES_PER_SEARCH: 20
         run: |

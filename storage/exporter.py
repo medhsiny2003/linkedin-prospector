@@ -186,7 +186,7 @@ class ExcelExporter:
         """
         from datetime import datetime
         results = []
-        data_dir = config.DATA_DIR
+        data_dir = getattr(config, "DATA_DIR", config.OUTPUT_EXCEL_PATH.parent)
         
         hist_path = data_dir / "contacts_historique.xlsx"
         if hist_path.exists() and hist_path.stat().st_size > 0:

@@ -72,8 +72,9 @@ class HybridScraper:
             excel_exporter.export_from_db()
             return total_mcp_leads
 
-        # 2. Lancement du navigateur Microsoft Edge / Chromium
-        report(0.10, "Lancement du navigateur...")
+        # 2. Lancement du navigateur Microsoft Edge (Local) ou Chromium Headless (Cloud)
+        exec_mode = os.getenv("EXECUTION_MODE", "cloud" if sys.platform != "win32" else "local").lower()
+        report(0.10, f"Démarrage du moteur en mode {exec_mode.upper()}...")
         try:
             context, page = await stealth_browser.launch()
         except Exception as e:
@@ -86,17 +87,24 @@ class HybridScraper:
         total_saved_leads = 0
 
         try:
-            # 3. Authentification avec callback en direct
-            def auth_status_cb(msg: str):
-                report(0.15, msg)
-
-            is_auth = await auth_manager.authenticate(context, page, status_callback=auth_status_cb)
-            if not is_auth:
-                audit_logger.log_event("XRAY_MODE_FALLBACK", "Session LinkedIn directe non active. Basculement transparent sur le Moteur X-Ray OSINT.")
-                report(0.18, "🌐 Mode Cloud / X-Ray Activé : Prospection OSINT via Google & Bing...")
+            # 3. Stratégie d'authentification selon le mode
+            if exec_mode == "cloud":
+                # En Cloud (GitHub Actions Ubuntu), X-Ray OSINT sans session est le moteur principal
+                audit_logger.log_event("MODE_CLOUD_INIT", "Mode Cloud actif (Linux Ubuntu) : Moteur X-Ray OSINT sans session.")
+                report(0.18, "🌐 Mode Cloud Activé : Prospection OSINT via Google & Bing...")
+                is_auth = False
             else:
-                report(0.20, "Simulation de navigation naturelle sur LinkedIn...")
-                await linkedin_browser_scraper.perform_decoy_activity(page)
+                # En Local (Windows), authentification Playwright Edge avec profil persistant
+                def auth_status_cb(msg: str):
+                    report(0.15, msg)
+
+                is_auth = await auth_manager.authenticate(context, page, status_callback=auth_status_cb)
+                if not is_auth:
+                    audit_logger.log_event("XRAY_MODE_FALLBACK", "Session locale non active. Basculement sur X-Ray OSINT.")
+                    report(0.18, "🌐 Mode X-Ray Activé : Prospection OSINT via Google & Bing...")
+                else:
+                    report(0.20, "Simulation de navigation naturelle sur LinkedIn...")
+                    await linkedin_browser_scraper.perform_decoy_activity(page)
 
             if stop_check and stop_check():
                 report(0.20, "🛑 Prospection interrompue par l'utilisateur.")
