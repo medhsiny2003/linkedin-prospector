@@ -198,10 +198,17 @@ if is_job_running or worker_status["logs"]:
     elif worker_status.get("error"):
         st.error(f"❌ **Erreur :** {worker_status['error']}")
     else:
-        st.success(f"🎉 **Prospection terminée avec succès !** {msg}")
-        if pct >= 0.95 and ("job_celebrated" not in st.session_state or not st.session_state["job_celebrated"]):
-            st.balloons()
-            st.session_state["job_celebrated"] = True
+        recent_leads_count = len(worker_status.get("recent_leads", []))
+        if recent_leads_count > 0:
+            st.success(f"🎉 **Prospection terminée avec succès !** {recent_leads_count} nouveau(x) contact(s) qualifié(s).")
+            if pct >= 0.95 and ("job_celebrated" not in st.session_state or not st.session_state["job_celebrated"]):
+                st.balloons()
+                st.session_state["job_celebrated"] = True
+        else:
+            if sys.platform != "win32":
+                st.info("ℹ️ **Mode Streamlit Cloud** : Le bouton ci-dessus est réservé à l'exécution locale sur PC (`Lancer_Prospector.bat`). Pour lancer la prospection **24h/24 dans le Cloud (PC éteint)**, utilisez le bouton bleu **'🚀 Lancer sur le Cloud'** en haut de la page !")
+            else:
+                st.info(f"ℹ️ {msg}")
 
     # Console de logs en direct
     logs = worker_status["logs"]
