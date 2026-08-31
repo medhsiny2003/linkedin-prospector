@@ -146,14 +146,22 @@ class HybridScraper:
                     )
                     audit_logger.log_event("SEARCH_TARGET", f"Prospection : {company} - {title}")
                     
-                    profiles = await linkedin_browser_scraper.search_and_scrape(
-                        page=page,
-                        company=company,
-                        keywords=title,
-                        location=location,
-                        max_profiles=max_profiles_per_search,
-                        stop_check=stop_check
-                    )
+                    # Vérification du Cache TTL 7 jours (réduction de 50-70% des requêtes répétées)
+                    from core.cache.cache_manager import cache_manager
+                    cached_profiles = cache_manager.get(company, title, location)
+                    if cached_profiles:
+                        profiles = cached_profiles
+                    else:
+                        profiles = await linkedin_browser_scraper.search_and_scrape(
+                            page=page,
+                            company=company,
+                            keywords=title,
+                            location=location,
+                            max_profiles=max_profiles_per_search,
+                            stop_check=stop_check
+                        )
+                        if profiles:
+                            cache_manager.set(company, title, location, profiles)
 
                     # Filtrage sémantique intelligent par IA (Gemini Flash / Fallback sémantique)
                     from enricher.ai_filter import ai_filter

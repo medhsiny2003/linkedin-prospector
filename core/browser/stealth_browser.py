@@ -90,9 +90,10 @@ class StealthBrowser:
         ]
 
         proxy_dict = None
-        if config.PROXY_URL:
-            proxy_dict = {"server": config.PROXY_URL}
-            audit_logger.log_event("PROXY_CONFIG", f"Utilisation du proxy : {config.PROXY_URL}")
+        from core.network.proxy_manager import proxy_manager
+        proxy_dict = proxy_manager.get_playwright_proxy_dict()
+        if proxy_dict:
+            audit_logger.log_event("PROXY_CONFIG", f"Utilisation du proxy : {proxy_dict.get('server')}")
 
         edge_exe = self.find_edge_executable()
 
