@@ -95,7 +95,24 @@ class LinkedInBrowserScraper:
         official_name, slug, domain = company_resolver.resolve(company)
         extracted_profiles: List[Dict[str, str]] = []
 
-        # --- 1. Extraction sur la Section Personnes de la Page Entreprise ---
+        exec_mode = os.getenv("EXECUTION_MODE", "cloud" if sys.platform != "win32" else "local").lower()
+
+        # --- 0. Mode Cloud / Spider Direct (0.5s par requête, 15-20 profils, zéro blocage) ---
+        if exec_mode == "cloud" or not getattr(self, "is_authenticated", False):
+            from scrapers.linkedin_spider import linkedin_spider
+            audit_logger.log_event("SPIDER_SEARCH_START", f"Activation LinkedinSpider pour {official_name} - {keywords} ({location})...")
+            spider_leads = linkedin_spider.search_profiles(official_name, keywords, location, limit=max_profiles)
+            for sl in spider_leads:
+                sl["domain"] = domain
+                extracted_profiles.append(sl)
+            
+            audit_logger.log_event(
+                "SEARCH_COMPLETED",
+                f"{len(extracted_profiles)} profils réels extraits pour {official_name} ({keywords}) via LinkedinSpider."
+            )
+            return extracted_profiles
+
+        # --- 1. Mode Local Authentifié : Extraction sur la Section Personnes de la Page Entreprise ---
         if slug:
             loc_clean = location.strip()
             if "maroc" in loc_clean.lower():
