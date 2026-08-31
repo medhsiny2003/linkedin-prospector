@@ -34,11 +34,15 @@ async def main():
     saved_profiles = get_saved_profiles()
     requested_profile = os.getenv("TARGET_PROFILE", "").strip() or (sys.argv[1] if len(sys.argv) > 1 else "")
     
-    if requested_profile and requested_profile in saved_profiles:
+    # Option "Mon Profil Actif" = utiliser la config Streamlit active
+    if not requested_profile or "Profil Actif" in requested_profile or "Mon Profil" in requested_profile:
+        cfg = get_active_config()
+        print(f"[*] Utilisation du Profil Actif (configuré dans Streamlit)")
+    elif requested_profile in saved_profiles:
         print(f"[*] Utilisation du profil sélectionné : {requested_profile}")
         cfg = saved_profiles[requested_profile]
     else:
-        # Recherche par mot-clé dans les profils sauvegardés (ex: 'Ingénierie', 'Tech', 'Aéronautique')
+        # Recherche par mot-clé dans les profils sauvegardés
         matched = next((p for name, p in saved_profiles.items() if requested_profile and requested_profile.lower() in name.lower()), None)
         if matched:
             print(f"[*] Profil sélectionné par correspondance : {requested_profile}")

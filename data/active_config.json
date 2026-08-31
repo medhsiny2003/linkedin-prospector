@@ -1,9 +1,9 @@
 {
-  "selected_profile": "Mon Profil Test Personnalise",
-  "companies": "OCP Group, UM6P",
-  "job_titles": "Ingenieur R&D",
-  "location": "Benguerir, Maroc",
-  "max_contacts": 25,
+  "selected_profile": "🌍 International - Drones & Robotique Embarquée",
+  "companies": "TEKEVER, Spin.Works, GhostySky, Connect Robotics, DTM Diversity Technology Minho, Trisolaris Advanced Technologies, Bellator Oss Portugal, Exail Robotics Belgium, ALX Systems, Naval Group Belgium, Safran Aero Boosters",
+  "job_titles": "Embedded Software Engineer, Robotics Engineer, Drone Systems Engineer, Computer Vision Engineer, Firmware Engineer, Talent Acquisition, CTO, Lead Embedded Engineer",
+  "location": "International",
+  "max_contacts": 20,
   "enable_mx": true,
   "safe_mode": true
 }

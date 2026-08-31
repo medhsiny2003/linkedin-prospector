@@ -110,6 +110,12 @@ def get_saved_profiles() -> Dict[str, Dict[str, Any]]:
             "job_titles": "Ingénieur R&D, Responsable Systèmes, CEO, Fondateur, Recruteur",
             "location": "France",
             "max_contacts": 15
+        },
+        "🌍 International - Drones & Robotique Embarquée": {
+            "companies": "TEKEVER, Spin.Works, GhostySky, Connect Robotics, DTM Diversity Technology Minho, Trisolaris Advanced Technologies, Bellator Oss Portugal, Exail Robotics Belgium, ALX Systems, Naval Group Belgium, Safran Aero Boosters",
+            "job_titles": "Embedded Software Engineer, Robotics Engineer, Drone Systems Engineer, Computer Vision Engineer, Firmware Engineer, Talent Acquisition, CTO, Lead Embedded Engineer",
+            "location": "International",
+            "max_contacts": 20
         }
     }
 

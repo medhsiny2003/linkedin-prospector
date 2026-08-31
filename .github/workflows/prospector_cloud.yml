@@ -7,16 +7,20 @@ on:
         description: 'Sélectionnez le Profil Cible à Prospecter :'
         required: true
         type: choice
-        default: '🇲🇦 Maroc - Ingénierie, Tech, IA & ESN (Casablanca / Rabat / Fès)'
+        default: '⚡ Mon Profil Actif (configuré dans Streamlit)'
         options:
+          - '⚡ Mon Profil Actif (configuré dans Streamlit)'
+          - '🌍 International - Drones & Robotique Embarquée'
           - '🇲🇦 Maroc - Ingénierie, Tech, IA & ESN (Casablanca / Rabat / Fès)'
           - '🇲🇦 Maroc - Aéronautique, Drones & Industrie (Casablanca / Nouaceur / Tanger)'
           - '🇲🇦 Maroc - Grands Groupes Nationaux & R&D (OCP, UM6P, Télécoms, Banques)'
           - '🇫🇷 France - Drones & Systèmes Embarqués'
+          - '🇫🇷 France - Aéronautique & Défense (Toulouse / Paris)'
+          - '🇫🇷 France - Start-ups Drones & Robotique'
+          - '00'
   schedule:
-    - cron: '0 9 * * *'  # Tourne 7j/7 tous les jours à 10h Maroc
+    - cron: '0 9 * * *'
 
-# ⚠️ PERMISSIONS OBLIGATOIRES pour que le bot puisse push les résultats
 permissions:
   contents: write
 
@@ -51,7 +55,7 @@ jobs:
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           LINKEDIN_COOKIE: ${{ secrets.LINKEDIN_COOKIE }}
-          TARGET_PROFILE: ${{ inputs.target_profile || '🇲🇦 Maroc - Ingénierie, Tech, IA & ESN (Casablanca / Rabat / Fès)' }}
+          TARGET_PROFILE: ${{ inputs.target_profile || '⚡ Mon Profil Actif (configuré dans Streamlit)' }}
           EXECUTION_MODE: "cloud"
           HEADLESS: "true"
           MAX_PROFILES_PER_SEARCH: 20
