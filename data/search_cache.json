@@ -10528,5 +10528,105 @@
         "domain": "inwi.ma"
       }
     ]
+  },
+  "inwi___hr business partner___casablanca, rabat, benguerir, maroc": {
+    "timestamp": 1788158732.8911533,
+    "data": [
+      {
+        "first_name": "Azdine",
+        "last_name": "El Mountassir Billah",
+        "job_title": "Président Directeur General ...",
+        "company": "inwi",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/azdine-el-mountassir-billah-98a699108",
+        "matched_keywords": "inwi, \"HR Business Partner\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "inwi.ma"
+      },
+      {
+        "first_name": "Mohammed",
+        "last_name": "Benmahjoub",
+        "job_title": "Directeur Général -- Entreprise ...",
+        "company": "inwi",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/mohammed-benmahjoub-02b08411",
+        "matched_keywords": "inwi, \"HR Business Partner\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "inwi.ma"
+      }
+    ]
+  },
+  "inwi___directeur r&d___casablanca, rabat, benguerir, maroc": {
+    "timestamp": 1788158737.831251,
+    "data": [
+      {
+        "first_name": "Mohammed",
+        "last_name": "Benmahjoub",
+        "job_title": "Directeur Général -- Entreprise ...",
+        "company": "inwi",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/mohammed-benmahjoub-02b08411",
+        "matched_keywords": "inwi, Directeur R&D (Yahoo Spider)",
+        "domain": "inwi.ma"
+      },
+      {
+        "first_name": "Omar",
+        "last_name": "Benrouyne",
+        "job_title": "Directeur de Mission @Inwi",
+        "company": "inwi",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://fr.linkedin.com/in/omar-benrouyne",
+        "matched_keywords": "inwi, Directeur R&D (Yahoo Spider)",
+        "domain": "inwi.ma"
+      },
+      {
+        "first_name": "Meizar",
+        "last_name": "Reda",
+        "job_title": "Directeur commercial PME",
+        "company": "inwi",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/meizar-reda-8719908a",
+        "matched_keywords": "inwi, Directeur R&D (Yahoo Spider)",
+        "domain": "inwi.ma"
+      },
+      {
+        "first_name": "Ismail",
+        "last_name": "Berrada",
+        "job_title": "Directeur chez Inwi",
+        "company": "inwi",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/ismail-berrada-014403124",
+        "matched_keywords": "inwi, Directeur R&D (Yahoo Spider)",
+        "domain": "inwi.ma"
+      },
+      {
+        "first_name": "Rachid",
+        "last_name": "Sefrioui",
+        "job_title": "Directeur Général",
+        "company": "inwi",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/rachid-sefrioui-4175a67",
+        "matched_keywords": "inwi, Directeur R&D (Yahoo Spider)",
+        "domain": "inwi.ma"
+      },
+      {
+        "first_name": "Alexandre",
+        "last_name": "Lemoues",
+        "job_title": "Directeur Général Adjoint",
+        "company": "inwi",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/alexandre-lemoues-05444814",
+        "matched_keywords": "inwi, Directeur R&D (Yahoo Spider)",
+        "domain": "inwi.ma"
+      },
+      {
+        "first_name": "Salwa",
+        "last_name": "Sakine",
+        "job_title": "Directeur Ressources Humaines Délégué chez ...",
+        "company": "inwi",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/salwa-sakine-067416b2",
+        "matched_keywords": "inwi, Directeur R&D (Yahoo Spider)",
+        "domain": "inwi.ma"
+      }
+    ]
   }
 }
