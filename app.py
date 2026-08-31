@@ -1,4 +1,4 @@
-﻿"""
+"""
 Point d'entree racine universel avec Navigation Native Streamlit (st.navigation).
 Assure le fonctionnement transparent de toutes les pages sur Cloud et Local.
 """
