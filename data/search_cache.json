@@ -1,4 +1,5 @@
 {
+<<<<<<< Updated upstream
   "capgemini maroc___talent acquisition specialist___casablanca, rabat, fès, maroc": {
     "timestamp": 1788157171.8551567,
     "data": [
@@ -60,10 +61,64 @@
         "location": "Casablanca, Rabat, Fès, Maroc",
         "profile_url": "https://fr.linkedin.com/in/florian-bernard-008544142",
         "matched_keywords": "Capgemini Maroc, \"Talent Acquisition Specialist\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+=======
+  "capgemini maroc___talent acquisition___maroc": {
+    "timestamp": 1788155397.704952,
+    "data": [
+      {
+        "first_name": "Soumaya",
+        "last_name": "H.",
+        "job_title": "Talent Acquisition chez Capgemini ♠️",
+        "company": "Capgemini Maroc",
+        "location": "Maroc",
+        "profile_url": "https://fr.linkedin.com/in/soumayahajiri/en",
+        "matched_keywords": "Capgemini Maroc, Talent Acquisition (Yahoo Spider)",
+        "domain": "capgemini.com"
+      },
+      {
+        "first_name": "Martial",
+        "last_name": "Ly",
+        "job_title": "Talent Acquisition Specialist",
+        "company": "Capgemini Maroc",
+        "location": "Maroc",
+        "profile_url": "https://fr.linkedin.com/in/martially",
+        "matched_keywords": "Capgemini Maroc, Talent Acquisition (Yahoo Spider)",
+        "domain": "capgemini.com"
+      },
+      {
+        "first_name": "Sara",
+        "last_name": "Benchikhi",
+        "job_title": "Talent Management, Talent Development ...",
+        "company": "Capgemini Maroc",
+        "location": "Maroc",
+        "profile_url": "https://ma.linkedin.com/in/sara-benchikhi-10947a59",
+        "matched_keywords": "Capgemini Maroc, Talent Acquisition (Yahoo Spider)",
+        "domain": "capgemini.com"
+      },
+      {
+        "first_name": "Asmaa",
+        "last_name": "Elbouhali",
+        "job_title": "Senior Talent Acquisition Partner l ...",
+        "company": "Capgemini Maroc",
+        "location": "Maroc",
+        "profile_url": "https://ma.linkedin.com/in/asmaa-elbouhali-b76795142",
+        "matched_keywords": "Capgemini Maroc, Talent Acquisition (Yahoo Spider)",
+        "domain": "capgemini.com"
+      },
+      {
+        "first_name": "Nassira",
+        "last_name": "Ouamalik",
+        "job_title": "Talent Acquisition Manager Capgemini ...",
+        "company": "Capgemini Maroc",
+        "location": "Maroc",
+        "profile_url": "https://ae.linkedin.com/in/nassira-ouamalik-8b915a8b",
+        "matched_keywords": "Capgemini Maroc, Talent Acquisition (Yahoo Spider)",
+>>>>>>> Stashed changes
         "domain": "capgemini.com"
       }
     ]
   },
+<<<<<<< Updated upstream
   "capgemini maroc___responsable recrutement___casablanca, rabat, fès, maroc": {
     "timestamp": 1788157179.2566195,
     "data": [
@@ -169,21 +224,72 @@
         "company": "Capgemini Maroc",
         "location": "Casablanca, Rabat, Fès, Maroc",
         "profile_url": "https://ma.linkedin.com/in/elmustapha-elabbassi-91320124",
+=======
+  "capgemini maroc___lead tech___maroc": {
+    "timestamp": 1788155400.1573198,
+    "data": [
+      {
+        "first_name": "Badra",
+        "last_name": "Hamdaoua",
+        "job_title": "Executive Vice President",
+        "company": "Capgemini Maroc",
+        "location": "Maroc",
+        "profile_url": "https://ma.linkedin.com/in/badra-hamdaoua-4980865",
+>>>>>>> Stashed changes
         "matched_keywords": "Capgemini Maroc, Lead Tech (Yahoo Spider)",
         "domain": "capgemini.com"
       },
       {
         "first_name": "Mohamed",
+<<<<<<< Updated upstream
         "last_name": "Lamzabi",
         "job_title": "Capgemini",
         "company": "Capgemini Maroc",
         "location": "Casablanca, Rabat, Fès, Maroc",
         "profile_url": "https://fr.linkedin.com/in/mohamed-lamzabi-239958136",
+=======
+        "last_name": "Louzani",
+        "job_title": "Technical Lead",
+        "company": "Capgemini Maroc",
+        "location": "Maroc",
+        "profile_url": "https://fr.linkedin.com/in/mohamed-louzani-03a1814a",
+        "matched_keywords": "Capgemini Maroc, Lead Tech (Yahoo Spider)",
+        "domain": "capgemini.com"
+      },
+      {
+        "first_name": "Aiman",
+        "last_name": "Ezzat",
+        "job_title": "Capgemini",
+        "company": "Capgemini Maroc",
+        "location": "Maroc",
+        "profile_url": "https://fr.linkedin.com/in/aiman-ezzat",
+        "matched_keywords": "Capgemini Maroc, Lead Tech (Yahoo Spider)",
+        "domain": "capgemini.com"
+      },
+      {
+        "first_name": "Khadija",
+        "last_name": "Kheiri",
+        "job_title": "Technique lead chez Capgemini",
+        "company": "Capgemini Maroc",
+        "location": "Maroc",
+        "profile_url": "https://ma.linkedin.com/in/khadija-kheiri-54009649",
+        "matched_keywords": "Capgemini Maroc, Lead Tech (Yahoo Spider)",
+        "domain": "capgemini.com"
+      },
+      {
+        "first_name": "Mohammed",
+        "last_name": "Chaoui",
+        "job_title": "Tech Lead BI & Dataviz",
+        "company": "Capgemini Maroc",
+        "location": "Maroc",
+        "profile_url": "https://fr.linkedin.com/in/mohammed-chaoui-15242294",
+>>>>>>> Stashed changes
         "matched_keywords": "Capgemini Maroc, Lead Tech (Yahoo Spider)",
         "domain": "capgemini.com"
       }
     ]
   },
+<<<<<<< Updated upstream
   "capgemini maroc___ingénieur logiciel embarqué___casablanca, rabat, fès, maroc": {
     "timestamp": 1788157190.4842799,
     "data": [
@@ -380,6 +486,69 @@
         "location": "Casablanca, Rabat, Fès, Maroc",
         "profile_url": "https://ma.linkedin.com/in/hassan-el-bouazzaoui-339b62218",
         "matched_keywords": "Alten Maroc, Lead Tech (Yahoo Spider)",
+=======
+  "alten maroc___talent acquisition___maroc": {
+    "timestamp": 1788155910.4643526,
+    "data": [
+      {
+        "first_name": "Imane",
+        "last_name": "Karaai",
+        "job_title": "Talent Acquisition Specialist at ALTEN ...",
+        "company": "Alten Maroc",
+        "location": "Maroc",
+        "profile_url": "https://ma.linkedin.com/in/imane-karaai-79b23388",
+        "matched_keywords": "Alten Maroc, Talent Acquisition (Yahoo Spider)",
+        "domain": "alten.com"
+      },
+      {
+        "first_name": "Meryem",
+        "last_name": "Daifi",
+        "job_title": "Talent acquisition specialist at ALTEN ...",
+        "company": "Alten Maroc",
+        "location": "Maroc",
+        "profile_url": "https://ma.linkedin.com/in/meryem-daifi-9aa5a9239",
+        "matched_keywords": "Alten Maroc, Talent Acquisition (Yahoo Spider)",
+        "domain": "alten.com"
+      },
+      {
+        "first_name": "Nada",
+        "last_name": "Benaddou",
+        "job_title": "Senior Talent Acquisition Specialist",
+        "company": "Alten Maroc",
+        "location": "Maroc",
+        "profile_url": "https://fr.linkedin.com/in/nada-benaddou-a0a650153",
+        "matched_keywords": "Alten Maroc, Talent Acquisition (Yahoo Spider)",
+        "domain": "alten.com"
+      },
+      {
+        "first_name": "Emilie",
+        "last_name": "Mercier",
+        "job_title": "ALTEN -Talent acquisition Senior ...",
+        "company": "Alten Maroc",
+        "location": "Maroc",
+        "profile_url": "https://fr.linkedin.com/in/emilie-mercier-203323105",
+        "matched_keywords": "Alten Maroc, Talent Acquisition (Yahoo Spider)",
+        "domain": "alten.com"
+      },
+      {
+        "first_name": "Salma",
+        "last_name": "Chafai",
+        "job_title": "Previous HR Assistant at ALTEN MAROC",
+        "company": "Alten Maroc",
+        "location": "Maroc",
+        "profile_url": "https://ca.linkedin.com/in/salma-chafai-692450173",
+        "matched_keywords": "Alten Maroc, Talent Acquisition (Yahoo Spider)",
+        "domain": "alten.com"
+      },
+      {
+        "first_name": "Mouna",
+        "last_name": "Reda",
+        "job_title": "Talent Acquisition Manager",
+        "company": "Alten Maroc",
+        "location": "Maroc",
+        "profile_url": "https://ma.linkedin.com/in/mouna-reda-7679a2179",
+        "matched_keywords": "Alten Maroc, Talent Acquisition (Yahoo Spider)",
+>>>>>>> Stashed changes
         "domain": "alten.com"
       },
       {
@@ -387,6 +556,7 @@
         "last_name": "Elfalah",
         "job_title": "ALTEN MAROC",
         "company": "Alten Maroc",
+<<<<<<< Updated upstream
         "location": "Casablanca, Rabat, Fès, Maroc",
         "profile_url": "https://ma.linkedin.com/in/yahya-elfalah",
         "matched_keywords": "Alten Maroc, Lead Tech (Yahoo Spider)",
@@ -1196,6 +1366,137 @@
         "profile_url": "https://ma.linkedin.com/in/brahim-nabil-8892a028",
         "matched_keywords": "CGI Maroc, \"Lead Tech\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
         "domain": "cgi.com"
+=======
+        "location": "Maroc",
+        "profile_url": "https://ma.linkedin.com/in/yahya-elfalah",
+        "matched_keywords": "Alten Maroc, Talent Acquisition (Yahoo Spider)",
+        "domain": "alten.com"
+      },
+      {
+        "first_name": "Alten",
+        "last_name": "...ousama Karhate",
+        "job_title": "Consultant senior chez ALTEN ...",
+        "company": "Alten Maroc",
+        "location": "Maroc",
+        "profile_url": "https://ma.linkedin.com/in/ousama-karhate",
+        "matched_keywords": "Alten Maroc, Talent Acquisition (Yahoo Spider)",
+        "domain": "alten.com"
+      },
+      {
+        "first_name": "Hajar",
+        "last_name": "Bououd",
+        "job_title": "Directrice des ressources humaines et ...",
+        "company": "Alten Maroc",
+        "location": "Maroc",
+        "profile_url": "https://ma.linkedin.com/in/hajarbououd",
+        "matched_keywords": "Alten Maroc, Talent Acquisition (Yahoo Spider)",
+        "domain": "alten.com"
+      },
+      {
+        "first_name": "Mariam",
+        "last_name": "Ben Brahim",
+        "job_title": "Responsable support applicative chez ...",
+        "company": "Alten Maroc",
+        "location": "Maroc",
+        "profile_url": "https://ma.linkedin.com/in/mariam-ben-brahim-888a29159",
+        "matched_keywords": "Alten Maroc, Talent Acquisition (Yahoo Spider)",
+        "domain": "alten.com"
+      }
+    ]
+  },
+  "alten maroc___ingenieur___maroc": {
+    "timestamp": 1788155918.209937,
+    "data": [
+      {
+        "first_name": "Nabil",
+        "last_name": "El Khammal",
+        "job_title": "Ingénieur Planning Moyens – Projet STLA-S ...",
+        "company": "Alten Maroc",
+        "location": "Maroc",
+        "profile_url": "https://fr.linkedin.com/in/nabil-el-khammal",
+        "matched_keywords": "Alten Maroc, Ingenieur (Yahoo Spider)",
+        "domain": "alten.com"
+      },
+      {
+        "first_name": "Walid",
+        "last_name": "Boulahrouf",
+        "job_title": "Underbody Process Engineer at ALTEN ...",
+        "company": "Alten Maroc",
+        "location": "Maroc",
+        "profile_url": "https://ma.linkedin.com/in/walid-boulahrouf-435898167",
+        "matched_keywords": "Alten Maroc, Ingenieur (Yahoo Spider)",
+        "domain": "alten.com"
+      },
+      {
+        "first_name": "Alae",
+        "last_name": "M.",
+        "job_title": "Ingénieur d’études chez ALTEN MAROC",
+        "company": "Alten Maroc",
+        "location": "Maroc",
+        "profile_url": "https://ma.linkedin.com/in/alae-m-5a8897139",
+        "matched_keywords": "Alten Maroc, Ingenieur (Yahoo Spider)",
+        "domain": "alten.com"
+      },
+      {
+        "first_name": "Hicham",
+        "last_name": "Bakhniss",
+        "job_title": "Data & BI Supply Chain Analyst I Ecole ...",
+        "company": "Alten Maroc",
+        "location": "Maroc",
+        "profile_url": "https://fr.linkedin.com/in/hicham-bakhniss-981657246",
+        "matched_keywords": "Alten Maroc, Ingenieur (Yahoo Spider)",
+        "domain": "alten.com"
+      },
+      {
+        "first_name": "Khaoula",
+        "last_name": "Ajauhari",
+        "job_title": "Health, Safety & Environment (HSE ...",
+        "company": "Alten Maroc",
+        "location": "Maroc",
+        "profile_url": "https://ca.linkedin.com/in/khaoula-ajauhari",
+        "matched_keywords": "Alten Maroc, Ingenieur (Yahoo Spider)",
+        "domain": "alten.com"
+      },
+      {
+        "first_name": "Yasmine",
+        "last_name": "Belhachemi",
+        "job_title": "Communication & Data Management Officer ...",
+        "company": "Alten Maroc",
+        "location": "Maroc",
+        "profile_url": "https://be.linkedin.com/in/yasmine-belhachemi",
+        "matched_keywords": "Alten Maroc, Ingenieur (Yahoo Spider)",
+        "domain": "alten.com"
+      },
+      {
+        "first_name": "Ingénieure",
+        "last_name": "Support Technique",
+        "job_title": "ingénieure support technique chez ALTEN MAROC ...",
+        "company": "Alten Maroc",
+        "location": "Maroc",
+        "profile_url": "https://ma.linkedin.com/in/m-k-190878116",
+        "matched_keywords": "Alten Maroc, Ingenieur (Yahoo Spider)",
+        "domain": "alten.com"
+      },
+      {
+        "first_name": "Hajar",
+        "last_name": "Bououd",
+        "job_title": "Directrice des ressources humaines et ...",
+        "company": "Alten Maroc",
+        "location": "Maroc",
+        "profile_url": "https://ma.linkedin.com/in/hajarbououd",
+        "matched_keywords": "Alten Maroc, Ingenieur (Yahoo Spider)",
+        "domain": "alten.com"
+      },
+      {
+        "first_name": "Alten",
+        "last_name": "...marouane Chakiri",
+        "job_title": "Référent technique FTTH chez ALTEN ...",
+        "company": "Alten Maroc",
+        "location": "Maroc",
+        "profile_url": "https://ma.linkedin.com/in/marouane-chakiri-b21843147",
+        "matched_keywords": "Alten Maroc, Ingenieur (Yahoo Spider)",
+        "domain": "alten.com"
+>>>>>>> Stashed changes
       }
     ]
   }
