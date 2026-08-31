@@ -9218,5 +9218,70 @@
         "domain": "safrangroup.com"
       }
     ]
+  },
+  "ocp group___responsable recrutement___casablanca, rabat, benguerir, maroc": {
+    "timestamp": 1788158571.3181698,
+    "data": [
+      {
+        "first_name": "Chrif",
+        "last_name": "Bouenani",
+        "job_title": "Responsable de projet chez OCP Group",
+        "company": "OCP Group",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://fr.linkedin.com/in/chrif-bouenani-80b05a345",
+        "matched_keywords": "OCP Group, Responsable Recrutement (Yahoo Spider)",
+        "domain": "ocpgroup.ma"
+      },
+      {
+        "first_name": "Lalla",
+        "last_name": "Khadija Ben",
+        "job_title": "Responsable des ressources ...",
+        "company": "OCP Group",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://fr.linkedin.com/in/lalla-khadija-ben-abdelhadi-8b3a57386",
+        "matched_keywords": "OCP Group, Responsable Recrutement (Yahoo Spider)",
+        "domain": "ocpgroup.ma"
+      },
+      {
+        "first_name": "Loubna",
+        "last_name": "Jaa",
+        "job_title": "Responsable Achats",
+        "company": "OCP Group",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/loubna-jaa-73b740201",
+        "matched_keywords": "OCP Group, Responsable Recrutement (Yahoo Spider)",
+        "domain": "ocpgroup.ma"
+      },
+      {
+        "first_name": "Oubrahim",
+        "last_name": "M.",
+        "job_title": "OCPGROUP",
+        "company": "OCP Group",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/oubrahim-m-13798a189",
+        "matched_keywords": "OCP Group, Responsable Recrutement (Yahoo Spider)",
+        "domain": "ocpgroup.ma"
+      },
+      {
+        "first_name": "Zineb",
+        "last_name": "Cherkaoui Salhi",
+        "job_title": "Responsable ressources humaines ...",
+        "company": "OCP Group",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/zineb-cherkaoui-salhi-31490380",
+        "matched_keywords": "OCP Group, Responsable Recrutement (Yahoo Spider)",
+        "domain": "ocpgroup.ma"
+      },
+      {
+        "first_name": "Jamal",
+        "last_name": "Moustakim",
+        "job_title": "Purchasing Manager",
+        "company": "OCP Group",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://fr.linkedin.com/in/jamal-moustakim-9291b523",
+        "matched_keywords": "OCP Group, Responsable Recrutement (Yahoo Spider)",
+        "domain": "ocpgroup.ma"
+      }
+    ]
   }
 }
