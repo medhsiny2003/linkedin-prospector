@@ -1,21 +1,17 @@
-﻿# Python
+# Python
 __pycache__/
 *.py[cod]
 *.class
 *.so
 .pytest_cache/
 
-# Environnement et Secrets
+# Environnement et Secrets confidentiels
 .env
 *.env.local
 
-# Bases de données locales et fichiers temporaires
-*.db
-*.db-journal
-*.xlsx
-*.csv
-data/
-app/data/
+# Sessions de navigation et logs temporaires
+data/sessions/
+app/data/sessions/
 app/logs/
 logs/
 

@@ -1,0 +1,44 @@
+{
+  "🇲🇦 Maroc - Aéronautique, Drones & Industrie (Casablanca / Nouaceur / Tanger)": {
+    "companies": "Airbus Atlantic Maroc, Safran Maroc, Thales Maroc, Hexcel Maroc, Collins Aerospace Maroc, Latecoere Maroc, Daher Maroc, LPFM, Aerotechnic Industries, MAScIR, AIAC, Eaton Maroc",
+    "job_titles": "Responsable RH, Recruteur, Talent Acquisition, Ingénieur Aéronautique, Ingénieur Systèmes Embarqués, Chef de projet R&D, Responsable Production",
+    "location": "Casablanca, Nouaceur, Tanger, Maroc",
+    "max_contacts": 20
+  },
+  "🇲🇦 Maroc - Ingénierie, Tech, IA & ESN (Casablanca / Rabat / Fès)": {
+    "companies": "Capgemini Maroc, Alten Maroc, SEGULA Maroc, Expleo Maroc, Atos Maroc, Sopra Steria Maroc, CGI Maroc, DXC Technology Maroc, Intelcia, Concentrix Maroc",
+    "job_titles": "Talent Acquisition Specialist, Responsable Recrutement, Lead Tech, Ingénieur Logiciel Embarqué, Data Scientist, Chef de projet IT",
+    "location": "Casablanca, Rabat, Fès, Maroc",
+    "max_contacts": 20
+  },
+  "🇲🇦 Maroc - Grands Groupes Nationaux & R&D (OCP, UM6P, Télécoms, Banques)": {
+    "companies": "OCP Group, UM6P, MAScIR, Maroc Telecom, Orange Maroc, inwi, ONEE, CDG, Attijariwafa bank, Banque Populaire, Bank of Africa",
+    "job_titles": "Responsable Recrutement, HR Business Partner, Directeur R&D, Chef de projet Innovation, Ingénieur Systèmes & Réseaux",
+    "location": "Casablanca, Rabat, Benguerir, Maroc",
+    "max_contacts": 20
+  },
+  "🇫🇷 France - Drones & Systèmes Embarqués": {
+    "companies": "Thales, Airbus, Safran, Dassault Aviation, MBDA, Naval Group, Parrot, Delair, Elistair, Drone Volt, Hexadrone, SBG Systems, Shark Robotics, Aerix Systems",
+    "job_titles": "Responsable RH, Recruteur, Talent Acquisition, Chef de projet Drones, Responsable Systèmes Embarqués, Ingénieur R&D Robotique",
+    "location": "France",
+    "max_contacts": 15
+  },
+  "🇫🇷 France - Aéronautique & Défense (Toulouse / Paris)": {
+    "companies": "Airbus, Thales, Safran, Dassault Aviation, MBDA, Naval Group, Latecoere, Daher",
+    "job_titles": "Responsable Recrutement, Talent Acquisition, Chef de projet, Ingénieur R&D",
+    "location": "Toulouse, Paris, France",
+    "max_contacts": 20
+  },
+  "🇫🇷 France - Start-ups Drones & Robotique": {
+    "companies": "atechsys,Delair, Parrot, Elistair, Drone Volt, Hexadrone, Seaber, Shark Robotics, Forssea Robotics, Flying Eye, EOS Technologie",
+    "job_titles": "Ingénieur R&D, Responsable Systèmes, CEO, Fondateur, Recruteur",
+    "location": "France",
+    "max_contacts": 15
+  },
+  "00": {
+    "companies": "ARTIS FACILITIES",
+    "job_titles": "Ingénieur maintenance, responsable technique, responsable maintenance, chef de projet,  ingénieur travaux, rh, recruteur, talent acquisition, responsable recrutement,Ingénieur Génie Electrique & Automatismee",
+    "location": "Maroc",
+    "max_contacts": 25
+  }
+}
