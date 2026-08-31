@@ -52,6 +52,23 @@ class AppConfig(BaseSettings):
     )
 
     # --- Moteur de Warm-Up & Plages Horaires ---
+    # --- Cibles et Filtres par Défaut ---
+    TARGET_COMPANIES: List[str] = [
+        "Thales", "Airbus", "Safran", "Dassault Aviation", "Delair", "Parrot", "Survey Copter", "Seaber", "Eos Technologie", "Diodon Drone Technology"
+    ]
+    TARGET_JOB_TITLES: List[str] = [
+        "Ingénieur GNC", "Ingénieur Systèmes Embarqués", "Ingénieur Drones", "Ingénieur Électronique", "Talent Acquisition", "Responsable RH"
+    ]
+    TARGET_LOCATIONS: List[str] = ["France", "Maroc"]
+    DEFAULT_COMPANIES: List[str] = [
+        "Thales", "Airbus", "Safran", "Dassault Aviation", "Delair", "Parrot", "Survey Copter", "Seaber", "Eos Technologie", "Diodon Drone Technology"
+    ]
+    DEFAULT_JOB_TITLES: List[str] = [
+        "Ingénieur GNC", "Ingénieur Systèmes Embarqués", "Ingénieur Drones", "Ingénieur Électronique", "Talent Acquisition", "Responsable RH"
+    ]
+    DEFAULT_LOCATIONS: List[str] = ["France", "Maroc"]
+    MAX_PROFILES_PER_SEARCH: int = 15
+
     WARMUP_DAYS: int = 14
     WARMUP_START_LIMIT: int = 2
     WARMUP_END_LIMIT: int = 18
