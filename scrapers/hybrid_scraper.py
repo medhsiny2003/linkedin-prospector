@@ -68,9 +68,17 @@ class HybridScraper:
             excel_exporter.export_from_db()
             return total_mcp_leads
 
-        # 2. Lancement du navigateur Microsoft Edge
-        report(0.10, "Lancement de Microsoft Edge...")
-        context, page = await stealth_browser.launch()
+        # 2. Lancement du navigateur Microsoft Edge / Chromium
+        report(0.10, "Lancement du navigateur...")
+        try:
+            context, page = await stealth_browser.launch()
+        except Exception as e:
+            audit_logger.log_event("BROWSER_ERROR", f"Erreur lancement navigateur: {str(e)}")
+            if sys.platform != "win32":
+                report(0.10, f"❌ Erreur environnement Cloud : {e}. Pour exécuter la prospection avec Microsoft Edge en mode réel et visible, lancez l'application sur votre PC local via Lancer_Prospector.bat !")
+            else:
+                report(0.10, f"❌ Impossible d'ouvrir le navigateur : {e}")
+            return 0
         total_saved_leads = 0
 
         try:
