@@ -80,15 +80,15 @@ st.markdown(summary_card, unsafe_allow_html=True)
 st.markdown("<br/>", unsafe_allow_html=True)
 st.markdown(
     """
-    <div style="background: linear-gradient(90deg, #F0F7FF 0%, #E6F0FA 100%); border: 1px solid #B8D5F5; border-radius: 10px; padding: 16px 20px; margin-bottom: 16px;">
+    <div style="background: linear-gradient(90deg, #F0F7FF 0%, #E6F0FA 100%); border: 1px solid #B8D5F5; border-radius: 12px; padding: 18px 22px; margin-bottom: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <div>
-                <h4 style="margin: 0; color: #0A66C2;">☁️ Mode Prospection Cloud 24/7 (PC Éteint)</h4>
-                <p style="margin: 4px 0 0 0; color: #4A5568; font-size: 0.85rem;">
-                    Exécutez vos recherches automatiquement en arrière-plan sans laisser votre ordinateur allumé.
+                <h4 style="margin: 0; color: #0A66C2;"><i class="fa-solid fa-cloud"></i> Mode Cloud Autonome 24/7</h4>
+                <p style="margin: 4px 0 0 0; color: #4A5568; font-size: 0.88rem;">
+                    Exécution distante sur serveurs Cloud avec synchronisation continue et mise à jour de la base.
                 </p>
             </div>
-            <a href="https://github.com/medhsiny2003/linkedin-prospector/actions/workflows/prospector_cloud.yml" target="_blank" style="background: #0A66C2; color: #FFFFFF; text-decoration: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; font-size: 0.9rem;">
+            <a href="https://github.com/medhsiny2003/linkedin-prospector/actions/workflows/prospector_cloud.yml" target="_blank" style="background: #0A66C2; color: #FFFFFF; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; font-size: 0.95rem; box-shadow: 0 4px 12px rgba(10, 102, 194, 0.25);">
                 🚀 Lancer sur le Cloud
             </a>
         </div>
@@ -97,6 +97,8 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+st.markdown("### 💻 Mode Local (Exécution sur votre PC)")
+st.caption("Ce mode ouvre votre navigateur Microsoft Edge en direct pour effectuer les recherches depuis votre session locale.")
 
 # Récupération de l'état du worker
 worker_status = pipeline_worker.get_status()
@@ -108,7 +110,7 @@ col_btn1, col_btn2, col_btn3, col_btn4 = st.columns([3, 2, 2, 3])
 
 with col_btn1:
     start_clicked = st.button(
-        "🚀 Lancer la Prospection",
+        "🚀 Lancer en Mode Local",
         type="primary",
         use_container_width=True,
         disabled=is_job_running

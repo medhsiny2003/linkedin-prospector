@@ -19,7 +19,7 @@ from config import config
 from storage.db_manager import db_manager
 from storage.exporter import excel_exporter
 from scrapers.hybrid_scraper import hybrid_scraper
-from app.utils.state_manager import get_active_config
+from app.utils.state_manager import get_active_config, get_saved_profiles
 
 
 async def main():
@@ -30,22 +30,36 @@ async def main():
     # 1. Initialisation de la base SQLite
     db_manager.init_db()
     
-    # 2. Chargement de la configuration active
-    cfg = get_active_config()
-    raw_companies = cfg.get("companies") or getattr(config, "TARGET_COMPANIES", ["Thales", "Safran", "Airbus", "Delair", "Dassault Aviation"])
+    # 2. Chargement de la configuration active ou du profil cible demandé
+    saved_profiles = get_saved_profiles()
+    requested_profile = os.getenv("TARGET_PROFILE", "").strip() or (sys.argv[1] if len(sys.argv) > 1 else "")
+    
+    if requested_profile and requested_profile in saved_profiles:
+        print(f"[*] Utilisation du profil sélectionné : {requested_profile}")
+        cfg = saved_profiles[requested_profile]
+    else:
+        # Recherche par mot-clé dans les profils sauvegardés (ex: 'Ingénierie', 'Tech', 'Aéronautique')
+        matched = next((p for name, p in saved_profiles.items() if requested_profile and requested_profile.lower() in name.lower()), None)
+        if matched:
+            print(f"[*] Profil sélectionné par correspondance : {requested_profile}")
+            cfg = matched
+        else:
+            cfg = get_active_config()
+    
+    raw_companies = cfg.get("companies") or getattr(config, "TARGET_COMPANIES", ["Capgemini Maroc", "Alten Maroc", "SEGULA Maroc", "Thales", "Safran", "Airbus"])
     if isinstance(raw_companies, str):
         companies = [c.strip() for c in raw_companies.split(",") if c.strip()]
     else:
         companies = list(raw_companies)
 
-    raw_titles = cfg.get("job_titles") or getattr(config, "TARGET_JOB_TITLES", ["Ingénieur GNC", "Ingénieur Systèmes Embarqués", "RH", "Recruteur"])
+    raw_titles = cfg.get("job_titles") or getattr(config, "TARGET_JOB_TITLES", ["Responsable Recrutement", "Talent Acquisition", "Ingénieur", "Lead Tech"])
     if isinstance(raw_titles, str):
         job_titles = [t.strip() for t in raw_titles.split(",") if t.strip()]
     else:
         job_titles = list(raw_titles)
 
-    location = str(cfg.get("location", "France") or "France")
-    max_per_search = int(cfg.get("max_contacts", cfg.get("max_profiles", 15)) or 15)
+    location = str(cfg.get("location", "Maroc") or "Maroc")
+    max_per_search = int(cfg.get("max_contacts", cfg.get("max_profiles", 20)) or 20)
     
     print(f"\n[*] Cibles : {len(companies)} entreprises, {len(job_titles)} postes ciblés.")
     print(f"[*] Zone géographique : {location}")

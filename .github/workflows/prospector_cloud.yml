@@ -2,6 +2,17 @@ name: LinkedIn Prospector 24-7 Cloud Engine
 
 on:
   workflow_dispatch:
+    inputs:
+      target_profile:
+        description: 'Sélectionnez le Profil Cible à Prospecter :'
+        required: true
+        type: choice
+        default: '🇲🇦 Maroc - Ingénierie, Tech, IA & ESN (Casablanca / Rabat / Fès)'
+        options:
+          - '🇲🇦 Maroc - Ingénierie, Tech, IA & ESN (Casablanca / Rabat / Fès)'
+          - '🇲🇦 Maroc - Aéronautique, Drones & Industrie (Casablanca / Nouaceur / Tanger)'
+          - '🇲🇦 Maroc - Grands Groupes Nationaux & R&D (OCP, UM6P, Télécoms, Banques)'
+          - '🇫🇷 France - Drones & Systèmes Embarqués'
   schedule:
     - cron: '0 9 * * *'  # Tourne 7j/7 tous les jours de l'année
 
@@ -35,8 +46,9 @@ jobs:
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           LINKEDIN_COOKIE: ${{ secrets.LINKEDIN_COOKIE }}
+          TARGET_PROFILE: ${{ inputs.target_profile || '🇲🇦 Maroc - Ingénierie, Tech, IA & ESN (Casablanca / Rabat / Fès)' }}
           HEADLESS: "true"
-          MAX_PROFILES_PER_SEARCH: 15
+          MAX_PROFILES_PER_SEARCH: 20
         run: |
           python cloud_runner.py
 

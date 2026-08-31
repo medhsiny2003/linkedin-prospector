@@ -5,6 +5,7 @@ et utilise le moteur X-Ray pour garantir 100% de vrais noms sans limitation Link
 """
 
 import asyncio
+import base64
 import re
 import urllib.parse
 from typing import Any, Callable, Dict, List, Optional
@@ -16,6 +17,31 @@ from core.security.risk_detector import risk_detector
 from enricher.company_resolver import company_resolver
 from scrapers.parsers.dom_parser import dom_parser
 from scrapers.parsers.strategy_parser import strategy_parser
+
+
+def decode_search_url(raw_url: str) -> str:
+    """Décode les liens de redirection de Bing et Google en vraies URLs LinkedIn."""
+    if not raw_url:
+        return ""
+    # Décodage Bing redirect : u=a1<base64>
+    match = re.search(r'[?&]u=a1([^&]+)', raw_url)
+    if match:
+        b64 = match.group(1)
+        b64 += '=' * (-len(b64) % 4)
+        try:
+            decoded = base64.b64decode(b64).decode('utf-8', errors='ignore')
+            if "linkedin.com" in decoded:
+                return decoded.split("?")[0].rstrip("/")
+        except Exception:
+            pass
+    # Décodage Google redirect : /url?q=https://...
+    if "url?q=" in raw_url:
+        try:
+            q_part = raw_url.split("url?q=")[1].split("&")[0]
+            return urllib.parse.unquote(q_part).split("?")[0].rstrip("/")
+        except Exception:
+            pass
+    return raw_url.split("?")[0].rstrip("/")
 
 
 class LinkedInBrowserScraper:
@@ -239,7 +265,7 @@ class LinkedInBrowserScraper:
                         continue
 
                     raw_title = await h2.inner_text()
-                    raw_href = await h2.get_attribute("href")
+                    raw_href = decode_search_url(await h2.get_attribute("href"))
                     raw_snippet = await snip.inner_text() if snip else ""
 
                     # Extraction propre du nom
@@ -331,7 +357,7 @@ class LinkedInBrowserScraper:
                             continue
 
                         raw_title = await h3.inner_text()
-                        raw_href = await link.get_attribute("href")
+                        raw_href = decode_search_url(await link.get_attribute("href"))
                         raw_snippet = await snip.inner_text() if snip else ""
 
                         name_candidate = raw_title.split(" - ")[0].split(" | ")[0].strip()

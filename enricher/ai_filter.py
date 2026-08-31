@@ -21,8 +21,8 @@ class AIFilter:
         self.timeout = 18.0
 
     def is_configured(self) -> bool:
-        """Indique si une clé API Google Gemini est activement renseignée."""
-        return bool(self.api_key and self.api_key.strip() and not self.api_key.startswith("your_"))
+        """Indique si une vraie clé API Google Gemini (AIzaSy...) est activement renseignée."""
+        return bool(self.api_key and self.api_key.strip().startswith("AIzaSy"))
 
     def filter_profiles_batch(
         self,
