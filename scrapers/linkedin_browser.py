@@ -6,7 +6,9 @@ et utilise le moteur X-Ray pour garantir 100% de vrais noms sans limitation Link
 
 import asyncio
 import base64
+import os
 import re
+import sys
 import urllib.parse
 from typing import Any, Callable, Dict, List, Optional
 from playwright.async_api import Page

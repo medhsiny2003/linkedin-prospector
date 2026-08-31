@@ -72,18 +72,24 @@ class HybridScraper:
             excel_exporter.export_from_db()
             return total_mcp_leads
 
-        # 2. Lancement du navigateur Microsoft Edge (Local) ou Chromium Headless (Cloud)
+        # 2. Gestion du moteur d'exécution (Browser ou LinkedinSpider Direct)
         exec_mode = os.getenv("EXECUTION_MODE", "cloud" if sys.platform != "win32" else "local").lower()
         report(0.10, f"Démarrage du moteur en mode {exec_mode.upper()}...")
-        try:
-            context, page = await stealth_browser.launch()
-        except Exception as e:
-            audit_logger.log_event("BROWSER_ERROR", f"Erreur lancement navigateur: {str(e)}")
-            if sys.platform != "win32":
-                report(0.10, f"❌ Erreur environnement Cloud : {e}. Pour exécuter la prospection avec Microsoft Edge en mode réel et visible, lancez l'application sur votre PC local via Lancer_Prospector.bat !")
-            else:
-                report(0.10, f"❌ Impossible d'ouvrir le navigateur : {e}")
-            return 0
+        context = None
+        page = None
+        is_auth = False
+
+        if exec_mode != "cloud":
+            try:
+                context, page = await stealth_browser.launch()
+            except Exception as e:
+                audit_logger.log_event("BROWSER_WARN", f"Navigateur indisponible, basculement sur LinkedinSpider : {str(e)}")
+                context = None
+                page = None
+        else:
+            audit_logger.log_event("MODE_CLOUD_DIRECT", "Mode Cloud actif : Moteur LinkedinSpider ultra-rapide sans navigateur.")
+            report(0.15, "🌐 Mode Cloud Activé : Moteur LinkedinSpider multi-moteurs 24/7...")
+
         total_saved_leads = 0
 
         try:

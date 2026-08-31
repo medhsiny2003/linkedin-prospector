@@ -143,7 +143,7 @@ class EmailValidator:
             # Port 25 filtré ou pare-feu (cas classique en environnement résidentiel)
             return None, "Port 25 inaccessible (Validation DNS MX maintenue)"
 
-    def validate(self, email: str) -> Dict[str, any]:
+    def validate(self, email: str, fast_mode: bool = True) -> Dict[str, any]:
         """
         Validation complète à 3 niveaux : Syntaxe + MX DNS + Handshake SMTP / Catch-All.
         """
@@ -173,8 +173,12 @@ class EmailValidator:
                 "reason": reason
             }
 
-        # 2. Handshake SMTP facultatif (non-bloquant)
-        smtp_exists, smtp_reason = self.verify_smtp_handshake(email, primary_mx)
+        # 2. Handshake SMTP facultatif (non-bloquant, ignoré en fast_mode)
+        if fast_mode:
+            smtp_exists = None
+            smtp_reason = "Vérification DNS MX active"
+        else:
+            smtp_exists, smtp_reason = self.verify_smtp_handshake(email, primary_mx)
 
         if smtp_exists is True:
             status_label = "Validé (SMTP 250 OK)"
