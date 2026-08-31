@@ -10153,5 +10153,105 @@
         "domain": "iam.ma"
       }
     ]
+  },
+  "maroc telecom___ingénieur systèmes & réseaux___casablanca, rabat, benguerir, maroc": {
+    "timestamp": 1788158681.5000079,
+    "data": [
+      {
+        "first_name": "Mohamed",
+        "last_name": "Benchaâboun",
+        "job_title": "Président du Directoire de Maroc ...",
+        "company": "Maroc Telecom",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/mohamed-bencha%C3%A2boun",
+        "matched_keywords": "Maroc Telecom, \"Ingénieur Systèmes & Réseaux\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "iam.ma"
+      },
+      {
+        "first_name": "Mohammed",
+        "last_name": "Benmahjoub",
+        "job_title": "Directeur Général -- Entreprise ...",
+        "company": "Maroc Telecom",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/mohammed-benmahjoub-02b08411",
+        "matched_keywords": "Maroc Telecom, \"Ingénieur Systèmes & Réseaux\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "iam.ma"
+      }
+    ]
+  },
+  "orange maroc___responsable recrutement___casablanca, rabat, benguerir, maroc": {
+    "timestamp": 1788158685.1415927,
+    "data": [
+      {
+        "first_name": "Elise",
+        "last_name": "Bonnet",
+        "job_title": "Responsable Recrutement chez Orange",
+        "company": "Orange Maroc",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://fr.linkedin.com/in/elise-bonnet-b064a222b",
+        "matched_keywords": "Orange Maroc, Responsable Recrutement (Yahoo Spider)",
+        "domain": "orange.ma"
+      },
+      {
+        "first_name": "Romain",
+        "last_name": "Giraud",
+        "job_title": "Responsable Recrutement chez Orange",
+        "company": "Orange Maroc",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://fr.linkedin.com/in/romain-giraud-a0290040",
+        "matched_keywords": "Orange Maroc, Responsable Recrutement (Yahoo Spider)",
+        "domain": "orange.ma"
+      },
+      {
+        "first_name": "Sanâa",
+        "last_name": "Benchekroun",
+        "job_title": "Chief Human Ressources Officer chez ...",
+        "company": "Orange Maroc",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/san%C3%A2a-benchekroun-35b69725",
+        "matched_keywords": "Orange Maroc, Responsable Recrutement (Yahoo Spider)",
+        "domain": "orange.ma"
+      },
+      {
+        "first_name": "Ismaël",
+        "last_name": "Cosadia",
+        "job_title": "Responsable GESEC et pilotage du recrutement ...",
+        "company": "Orange Maroc",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://re.linkedin.com/in/isma%C3%ABl-cosadia-8bab8922",
+        "matched_keywords": "Orange Maroc, Responsable Recrutement (Yahoo Spider)",
+        "domain": "orange.ma"
+      },
+      {
+        "first_name": "Hind",
+        "last_name": "Mouhallil",
+        "job_title": "Human Resources Consultant chez Orange ...",
+        "company": "Orange Maroc",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/hind-mouhallil-a96287a2",
+        "matched_keywords": "Orange Maroc, Responsable Recrutement (Yahoo Spider)",
+        "domain": "orange.ma"
+      },
+      {
+        "first_name": "Patricia",
+        "last_name": "Bony-Toure",
+        "job_title": "Responsable Gouvernance RH",
+        "company": "Orange Maroc",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ci.linkedin.com/in/patricia-bony-toure-b19688134",
+        "matched_keywords": "Orange Maroc, Responsable Recrutement (Yahoo Spider)",
+        "domain": "orange.ma"
+      },
+      {
+        "first_name": "Patrick",
+        "last_name": "Payet",
+        "job_title": "Orange",
+        "company": "Orange Maroc",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://re.linkedin.com/in/patrick-payet-24aa15252",
+        "matched_keywords": "Orange Maroc, Responsable Recrutement (Yahoo Spider)",
+        "domain": "orange.ma"
+      }
+    ]
   }
 }
