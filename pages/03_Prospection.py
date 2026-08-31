@@ -79,6 +79,28 @@ summary_card = f"""
 """
 st.markdown(summary_card, unsafe_allow_html=True)
 
+# Section Déclenchement Cloud 24/7
+st.markdown("<br/>", unsafe_allow_html=True)
+st.markdown(
+    """
+    <div style="background: linear-gradient(90deg, #F0F7FF 0%, #E6F0FA 100%); border: 1px solid #B8D5F5; border-radius: 10px; padding: 16px 20px; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h4 style="margin: 0; color: #0A66C2;">☁️ Mode Prospection Cloud 24/7 (PC Éteint)</h4>
+                <p style="margin: 4px 0 0 0; color: #4A5568; font-size: 0.85rem;">
+                    Exécutez vos recherches automatiquement en arrière-plan sans laisser votre ordinateur allumé.
+                </p>
+            </div>
+            <a href="https://github.com/medhsiny2003/linkedin-prospector/actions/workflows/prospector_cloud.yml" target="_blank" style="background: #0A66C2; color: #FFFFFF; text-decoration: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; font-size: 0.9rem;">
+                🚀 Lancer sur le Cloud
+            </a>
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+
 # Récupération de l'état du worker
 worker_status = pipeline_worker.get_status()
 is_job_running = worker_status["is_running"]
