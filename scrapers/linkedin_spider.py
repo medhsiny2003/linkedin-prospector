@@ -1,6 +1,7 @@
 """
 Moteur LinkedIn Spider Multi-Moteurs Haute Performance & Anti-Blocage.
 Combine Yahoo Search paginé, Bing Décodé et Mode Exploration Large pour extraire 15-20 profils par requête en 0.5s.
+Nettoie parfaitement les balises HTML, entités Unicode RTL (\u200f) et préfixes de breadcrumbs.
 """
 
 import os, sys, re, html, json, urllib.parse, base64
@@ -53,7 +54,7 @@ class LinkedinSpider:
         return profiles
 
     def _search_yahoo_paginated(self, company: str, keywords: str, location: str, limit: int) -> List[Dict[str, Any]]:
-        """Interroge Yahoo Search avec pagination sur 3 pages."""
+        """Interroge Yahoo Search avec extraction propre sans breadcrumb ni caractères RTL."""
         results = []
         clean_company = company.replace(" Maroc", "").strip()
         query = f'site:linkedin.com/in/ "{clean_company}" {keywords} "{location}"'
@@ -69,7 +70,7 @@ class LinkedinSpider:
                 items = re.findall(r'<div class="compTitle[^>]*>[\s\S]*?<a[^>]*href="([^"]*)"[^>]*>([\s\S]*?)</a>', resp.text)
                 if not items:
                     break
-                for href, raw_t in items:
+                for href, raw_html in items:
                     if len(results) >= limit:
                         break
                     # Décodage de l'URL Yahoo /RU=...
@@ -79,13 +80,26 @@ class LinkedinSpider:
                     if "linkedin.com/in/" not in real_url:
                         continue
 
-                    clean_t = re.sub(r'<[^>]+>', '', html.unescape(raw_t)).strip()
-                    clean_t = re.sub(r'^[^\s]+\.linkedin\.com[^\s]*\s*', '', clean_t).strip()
+                    # 1. Enlever complètement les balises span de breadcrumbs (ma.linkedin.com › in › ...)
+                    clean_html = re.sub(r'<span[^>]*class="[^"]*d-ib[^"]*"[^>]*>[\s\S]*?</span>\s*</span>', '', raw_html)
+                    clean_html = re.sub(r'<span[^>]*>[\s\S]*?</span>', '', clean_html)
                     
-                    name_cand = clean_t.split(" - ")[0].split(" | ")[0].strip()
+                    # 2. Nettoyer les balises restantes et les entités HTML
+                    clean_text = re.sub(r'<[^>]+>', '', clean_html)
+                    clean_text = html.unescape(clean_text).replace('\u200f', '').replace('\u200e', '').replace('\xa0', ' ').strip()
+                    
+                    # 3. Enlever tout résidu d'URL de breadcrumb en début de chaîne
+                    clean_text = re.sub(r'^[^\s]+\.linkedin\.com[^\s]*\s*', '', clean_text).strip()
+                    
+                    if not clean_text or len(clean_text) < 3:
+                        continue
+
+                    parts = clean_text.split(" - ")
+                    name_cand = parts[0].split(" | ")[0].strip()
                     fn, ln = dom_parser.parse_full_name(name_cand)
-                    if fn and ln:
-                        job = clean_t.split(" - ")[1].split(" | ")[0].strip() if " - " in clean_t else keywords
+                    
+                    if fn and ln and fn.lower() not in ["in", "linkedin", "profil", "utilisateur"]:
+                        job = parts[1].split(" | ")[0].strip() if len(parts) > 1 else keywords
                         if not any(x["profile_url"] == real_url for x in results):
                             results.append({
                                 "first_name": fn,
@@ -124,7 +138,7 @@ class LinkedinSpider:
                     if not h2_m:
                         continue
                     href_m = re.search(r'href="([^"]*)"', h2_m.group(1))
-                    t_clean = re.sub(r'<[^>]+>', '', html.unescape(h2_m.group(1))).strip()
+                    t_clean = re.sub(r'<[^>]+>', '', html.unescape(h2_m.group(1))).replace('\u200f', '').replace('\u200e', '').strip()
                     
                     if href_m and t_clean:
                         raw_href = href_m.group(1)
@@ -141,10 +155,11 @@ class LinkedinSpider:
                         if "linkedin.com/in/" not in real_url:
                             continue
 
-                        name_cand = t_clean.split(" - ")[0].split(" | ")[0].strip()
+                        parts = t_clean.split(" - ")
+                        name_cand = parts[0].split(" | ")[0].strip()
                         fn, ln = dom_parser.parse_full_name(name_cand)
-                        if fn and ln:
-                            job = t_clean.split(" - ")[1].split(" | ")[0].strip() if " - " in t_clean else keywords
+                        if fn and ln and fn.lower() not in ["in", "linkedin", "profil", "utilisateur"]:
+                            job = parts[1].split(" | ")[0].strip() if len(parts) > 1 else keywords
                             if not any(x["profile_url"] == real_url for x in results):
                                 results.append({
                                     "first_name": fn,

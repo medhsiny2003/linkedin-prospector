@@ -112,10 +112,15 @@ def get_timeline_distribution() -> pd.DataFrame:
 
 
 def get_recent_leads(limit: int = 10) -> pd.DataFrame:
-    """Retourne les N derniers contacts ajoutés avec colonnes essentielles."""
+    """Retourne les N derniers contacts ajoutés (les plus récents en premier)."""
     df = get_all_leads_df()
     if df.empty:
         return df
+
+    if "id" in df.columns:
+        df = df.sort_values(by="id", ascending=False)
+    elif "created_at" in df.columns:
+        df = df.sort_values(by="created_at", ascending=False)
 
     cols = ["first_name", "last_name", "job_title", "company", "proposed_email", "confidence_score", "status", "profile_url"]
     present_cols = [c for c in cols if c in df.columns]
