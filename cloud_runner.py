@@ -1,0 +1,71 @@
+"""
+Execute le pipeline de prospection en mode Cloud Autonome (GitHub Actions / Serveur 24/7).
+Tourne entierement en arriere-plan, enrichit les contacts et met a jour le fichier Excel.
+"""
+
+import asyncio
+import os
+import sys
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parent
+APP_DIR = PROJECT_ROOT / "app"
+
+for p in [str(PROJECT_ROOT), str(APP_DIR)]:
+    if p not in sys.path:
+        sys.path.insert(0, p)
+
+from config import config
+from storage.db_manager import db_manager
+from storage.exporter import excel_exporter
+from scrapers.hybrid_scraper import hybrid_scraper
+from app.utils.state_manager import get_active_config
+
+
+async def main():
+    print("==================================================================")
+    print("      LINKEDIN PROSPECTOR V3.1 - MOTEUR CLOUD AUTONOME 24/7       ")
+    print("==================================================================")
+    
+    # 1. Initialisation de la base SQLite
+    db_manager.init_db()
+    
+    # 2. Chargement de la configuration active
+    cfg = get_active_config()
+    companies = cfg.get("companies", config.TARGET_COMPANIES)
+    job_titles = cfg.get("job_titles", config.TARGET_JOB_TITLES)
+    location = cfg.get("location", config.TARGET_LOCATIONS[0] if config.TARGET_LOCATIONS else "France")
+    max_per_search = cfg.get("max_profiles", config.MAX_PROFILES_PER_SEARCH)
+    
+    print(f"\n[*] Cibles : {len(companies)} entreprises, {len(job_titles)} postes ciblés.")
+    print(f"[*] Zone géographique : {location}")
+    print(f"[*] Limite par recherche : {max_per_search} profils\n")
+    
+    # 3. Callback d'avancement
+    def progress_callback(pct, msg, lead_data=None):
+        pct_int = int(pct * 100)
+        lead_info = f" -> Nouveau contact : {lead_data.get('first_name')} {lead_data.get('last_name')} ({lead_data.get('company')})" if lead_data else ""
+        print(f"[{pct_int}%] {msg}{lead_info}")
+    
+    # 4. Lancement du scraping et enrichissement
+    try:
+        total_found = await hybrid_scraper.run_prospecting_pipeline(
+            companies=companies,
+            job_titles=job_titles,
+            location=location,
+            max_profiles_per_search=max_per_search,
+            progress_callback=progress_callback
+        )
+        print(f"\n[SUCCESS] Prospection Cloud terminée avec succès ! {total_found} contacts qualifiés.")
+    except Exception as e:
+        print(f"\n[ERROR] Erreur durant la prospection Cloud : {e}")
+        import traceback
+        traceback.print_exc()
+    
+    # 5. Exportation du fichier Excel final
+    excel_path = excel_exporter.export_from_db()
+    print(f"[EXPORT] Fichier Excel généré : {excel_path}")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
