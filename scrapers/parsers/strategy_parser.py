@@ -12,28 +12,36 @@ class StrategyParser:
         self.card_selectors = [
             "li.org-people-profile-card__profile-card-spacing",
             ".org-people-profiles-module__profile-list > li",
-            "div.org-people-card",
+            "div.org-people-profile-card",
+            "div[data-test-id='profile-card']",
             "div.artdeco-entity-lockup",
             "li.reusable-search__result-container",
             "div.entity-result",
             "li[data-view-name*='search-entity-result']",
             "li.artdeco-card",
-            "div.search-results-container li"
+            "div.search-results-container li",
+            "div[data-chameleon-result-urn]"
         ]
 
         self.title_selectors = [
+            "h1[data-test-id='profile-name']",
             ".org-people-profile-card__profile-title",
             "div.artdeco-entity-lockup__title a",
             "div.artdeco-entity-lockup__title",
             "span.entity-result__title-text a.app-aware-link",
+            "span.entity-result__title-text a",
             "a[data-test-app-aware-link]",
+            "a.app-aware-link[href*='/in/']",
             "a[href*='/in/']"
         ]
 
         self.subtitle_selectors = [
+            "div[data-test-id='profile-title']",
+            ".org-people-profile-card__profile-subtitle",
             ".lt-line-clamp--multi-line",
             "div.artdeco-entity-lockup__subtitle",
             "div.entity-result__primary-subtitle",
+            "div.text-body-medium",
             "div.t-14.t-black.t-normal",
             ".entity-result__summary",
             ".org-people-profile-card__profile-info p",

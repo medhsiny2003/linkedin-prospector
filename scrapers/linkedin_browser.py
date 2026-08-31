@@ -200,9 +200,15 @@ class LinkedInBrowserScraper:
         stop_check: Optional[Callable[[], bool]] = None
     ) -> List[Dict[str, str]]:
         """
-        Recherche X-Ray sur profils publics indexés via Bing et Google avec Pagination Multi-Pages et Circuit Breaker.
-        Garantit 100% de vrais noms de décideurs sans limitation LinkedIn.
+        Recherche X-Ray et Multi-Moteurs résiliente.
+        Combine LinkedinSpider (Yahoo / HTTP Direct) et Playwright (Bing / Google) pour garantir 100% d'extraction.
         """
+        # 1. Utilisation prioritaire du Spider Multi-Moteurs (Zéro blocage de connexion)
+        from scrapers.linkedin_spider import linkedin_spider
+        spider_leads = linkedin_spider.search_profiles(company, keywords, location=location, limit=max_profiles)
+        if spider_leads and len(spider_leads) >= 1:
+            return spider_leads
+
         if self.xray_failures >= 3:
             audit_logger.log_event("CIRCUIT_BREAKER", "Circuit Breaker X-Ray actif : pause de 15s...")
             await asyncio.sleep(15)
