@@ -843,5 +843,120 @@
         "domain": "expleogroup.com"
       }
     ]
+  },
+  "expleo maroc___responsable recrutement___casablanca, rabat, fès, maroc": {
+    "timestamp": 1788157301.7947676,
+    "data": [
+      {
+        "first_name": "Emmanuelle",
+        "last_name": "Hoareau",
+        "job_title": "Responsable Recrutement",
+        "company": "Expleo Maroc",
+        "location": "Casablanca, Rabat, Fès, Maroc",
+        "profile_url": "https://fr.linkedin.com/in/emmanuelle-hoareau",
+        "matched_keywords": "Expleo Maroc, \"Responsable Recrutement\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "expleogroup.com"
+      }
+    ]
+  },
+  "expleo maroc___lead tech___casablanca, rabat, fès, maroc": {
+    "timestamp": 1788157306.1598387,
+    "data": [
+      {
+        "first_name": "Ayub",
+        "last_name": "El-Maataoui",
+        "job_title": "Consultant @Expleo",
+        "company": "Expleo Maroc",
+        "location": "Casablanca, Rabat, Fès, Maroc",
+        "profile_url": "https://fr.linkedin.com/in/ayub-el-maataoui-179674165",
+        "matched_keywords": "Expleo Maroc, Lead Tech (Yahoo Spider)",
+        "domain": "expleogroup.com"
+      },
+      {
+        "first_name": "Naoufal",
+        "last_name": "Elmaftouh",
+        "job_title": "Automotive Technical Specialist ...",
+        "company": "Expleo Maroc",
+        "location": "Casablanca, Rabat, Fès, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/naoufal-elmaftouh/en",
+        "matched_keywords": "Expleo Maroc, Lead Tech (Yahoo Spider)",
+        "domain": "expleogroup.com"
+      },
+      {
+        "first_name": "Sara",
+        "last_name": "Hedda",
+        "job_title": "Team Leader chez Expleo",
+        "company": "Expleo Maroc",
+        "location": "Casablanca, Rabat, Fès, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/sara-hedda-",
+        "matched_keywords": "Expleo Maroc, Lead Tech (Yahoo Spider)",
+        "domain": "expleogroup.com"
+      },
+      {
+        "first_name": "Hajar",
+        "last_name": "Benallal",
+        "job_title": "Chef de projet ME",
+        "company": "Expleo Maroc",
+        "location": "Casablanca, Rabat, Fès, Maroc",
+        "profile_url": "https://fr.linkedin.com/in/hajar-benallal-8b6688174",
+        "matched_keywords": "Expleo Maroc, Lead Tech (Yahoo Spider)",
+        "domain": "expleogroup.com"
+      },
+      {
+        "first_name": "Akshay",
+        "last_name": "Kakani",
+        "job_title": "Talent Acquisition Lead at Expleo Group ...",
+        "company": "Expleo Maroc",
+        "location": "Casablanca, Rabat, Fès, Maroc",
+        "profile_url": "https://in.linkedin.com/in/akshay-kakani-a82417160",
+        "matched_keywords": "Expleo Maroc, Lead Tech (Yahoo Spider)",
+        "domain": "expleogroup.com"
+      },
+      {
+        "first_name": "Vincent",
+        "last_name": "Fusier",
+        "job_title": "Managing Director at expleo BENELUX",
+        "company": "Expleo Maroc",
+        "location": "Casablanca, Rabat, Fès, Maroc",
+        "profile_url": "https://be.linkedin.com/in/vincent-fusier",
+        "matched_keywords": "Expleo Maroc, Lead Tech (Yahoo Spider)",
+        "domain": "expleogroup.com"
+      },
+      {
+        "first_name": "Hamza",
+        "last_name": "Lahlal",
+        "job_title": "Expleo Group",
+        "company": "Expleo Maroc",
+        "location": "Casablanca, Rabat, Fès, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/hamzalahlal",
+        "matched_keywords": "Expleo Maroc, Lead Tech (Yahoo Spider)",
+        "domain": "expleogroup.com"
+      }
+    ]
+  },
+  "atos maroc___talent acquisition specialist___casablanca, rabat, fès, maroc": {
+    "timestamp": 1788157334.509166,
+    "data": [
+      {
+        "first_name": "Arthur",
+        "last_name": "Lopes",
+        "job_title": "Senior Talent Acquisition",
+        "company": "Atos Maroc",
+        "location": "Casablanca, Rabat, Fès, Maroc",
+        "profile_url": "https://fr.linkedin.com/in/arthur-lopes",
+        "matched_keywords": "Atos Maroc, \"Talent Acquisition Specialist\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "atos.net"
+      },
+      {
+        "first_name": "Gabriel",
+        "last_name": "Tayot",
+        "job_title": "Recruteur",
+        "company": "Atos Maroc",
+        "location": "Casablanca, Rabat, Fès, Maroc",
+        "profile_url": "https://fr.linkedin.com/in/gabriel-tayot",
+        "matched_keywords": "Atos Maroc, \"Talent Acquisition Specialist\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "atos.net"
+      }
+    ]
   }
 }
