@@ -122,6 +122,18 @@ class HybridScraper:
             seen_in_session = set()
             session_leads_list = []
 
+            # Charger les contacts déjà connus pour ne chercher que des NOUVEAUX
+            existing_leads = db_manager.get_all_leads()
+            known_urls = set()
+            known_names = set()
+            for el in existing_leads:
+                if el.get("profile_url"):
+                    known_urls.add(el["profile_url"].rstrip("/").lower())
+                fn_k = (el.get("first_name", "").strip().lower(), el.get("last_name", "").strip().lower(), el.get("company", "").strip().lower())
+                if fn_k[0] and fn_k[1]:
+                    known_names.add(fn_k)
+            audit_logger.log_event("DEDUP_INIT", f"{len(known_urls)} profils déjà connus chargés — seuls les NOUVEAUX contacts seront ajoutés.")
+
             for comp_idx, company in enumerate(target_companies):
                 if stop_check and stop_check():
                     report(0.5, "🛑 Arrêt demandé par l'utilisateur.")
@@ -186,9 +198,18 @@ class HybridScraper:
                         ln = raw_profile.get("last_name", "").strip()
                         lead_key = f"{fn.lower()}_{ln.lower()}_{company.lower()}"
 
-                        # Déduplication en direct : ignorer immédiatement les personnes déjà traitées
+                        # Déduplication en direct : ignorer les personnes déjà traitées dans cette session
                         if lead_key in seen_in_session:
                             continue
+
+                        # Ignorer les contacts DÉJÀ CONNUS en base (session précédente)
+                        profile_url = raw_profile.get("profile_url", "").rstrip("/").lower()
+                        name_key = (fn.lower(), ln.lower(), company.lower())
+                        if profile_url and profile_url in known_urls:
+                            continue
+                        if name_key in known_names:
+                            continue
+
                         seen_in_session.add(lead_key)
 
                         lead_info = self._enrich_and_save_profile(raw_profile, company, title)

@@ -13,7 +13,7 @@ from core.monitoring.audit_logger import audit_logger
 
 
 class CacheManager:
-    def __init__(self, ttl_seconds: int = 604800):  # 7 jours par défaut
+    def __init__(self, ttl_seconds: int = 43200):  # 12 heures par défaut (nouvelle session = nouveaux résultats)
         self.ttl = ttl_seconds
         self.cache_file = config.DATA_DIR / "search_cache.json"
         self._cache: Dict[str, Dict[str, Any]] = {}

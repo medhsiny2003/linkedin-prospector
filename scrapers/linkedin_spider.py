@@ -59,7 +59,7 @@ class LinkedinSpider:
         clean_company = company.replace(" Maroc", "").strip()
         query = f'site:linkedin.com/in/ "{clean_company}" {keywords} "{location}"'
         
-        for page_offset in [0, 10, 20]:
+        for page_offset in [0, 10, 20, 30, 40]:
             if len(results) >= limit:
                 break
             url = f"https://fr.search.yahoo.com/search?p={urllib.parse.quote(query)}&b={page_offset+1}"
@@ -120,7 +120,7 @@ class LinkedinSpider:
         clean_company = company.replace(" Maroc", "").strip()
         query = f'site:linkedin.com/in/ "{clean_company}" {keywords} {location}'
         
-        for first_offset in [1, 11, 21]:
+        for first_offset in [1, 11, 21, 31, 41]:
             if len(results) >= limit:
                 break
             url = f"https://www.bing.com/search?q={urllib.parse.quote(query)}&first={first_offset}&setlang=fr-FR"
