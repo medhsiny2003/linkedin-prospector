@@ -11788,5 +11788,70 @@
         "domain": "bankofafrica.ma"
       }
     ]
+  },
+  "bank of africa___hr business partner___casablanca, rabat, benguerir, maroc": {
+    "timestamp": 1788158909.7295184,
+    "data": [
+      {
+        "first_name": "Mohammed",
+        "last_name": "Squalli",
+        "job_title": "BANK OF AFRICA",
+        "company": "Bank of Africa (BMCE Group)",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://cd.linkedin.com/in/mohammed-squalli-22843026",
+        "matched_keywords": "Bank of Africa (BMCE Group), \"HR Business Partner\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "bankofafrica.ma"
+      },
+      {
+        "first_name": "Mohammed",
+        "last_name": "Zbir",
+        "job_title": "Directeur Régional",
+        "company": "Bank of Africa (BMCE Group)",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/mohammed-zbir-51118b34",
+        "matched_keywords": "Bank of Africa (BMCE Group), \"HR Business Partner\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "bankofafrica.ma"
+      },
+      {
+        "first_name": "Daniel",
+        "last_name": "Raharijaona",
+        "job_title": "Directeur d&#39;Agence chez BOA ...",
+        "company": "Bank of Africa (BMCE Group)",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://mg.linkedin.com/in/daniel-raharijaona-754794152",
+        "matched_keywords": "Bank of Africa (BMCE Group), \"HR Business Partner\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "bankofafrica.ma"
+      },
+      {
+        "first_name": "Rachid",
+        "last_name": "Seddouki",
+        "job_title": "Directeur Capital Humain",
+        "company": "Bank of Africa (BMCE Group)",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/rachid-seddouki-84690366",
+        "matched_keywords": "Bank of Africa (BMCE Group), \"HR Business Partner\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "bankofafrica.ma"
+      },
+      {
+        "first_name": "Yaya",
+        "last_name": "Coulibaly",
+        "job_title": "Directeur des Ressources Humaines",
+        "company": "Bank of Africa (BMCE Group)",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ci.linkedin.com/in/yaya-coulibaly-27440523",
+        "matched_keywords": "Bank of Africa (BMCE Group), \"HR Business Partner\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "bankofafrica.ma"
+      },
+      {
+        "first_name": "Rachid",
+        "last_name": "Muremangingo",
+        "job_title": "Directeur Général",
+        "company": "Bank of Africa (BMCE Group)",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://cd.linkedin.com/in/rachid-muremangingo-2b2798138",
+        "matched_keywords": "Bank of Africa (BMCE Group), \"HR Business Partner\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "bankofafrica.ma"
+      }
+    ]
   }
 }
