@@ -42,7 +42,7 @@ except Exception:
 css_path = APP_DIR / "styles" / "custom.css"
 if css_path.exists():
     with open(css_path, "r", encoding="utf-8") as f:
-        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+        st.markdown(f"""<head><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></head><style>{f.read()}</style>""", unsafe_allow_html=True)
 
 init_session_state()
 render_sidebar()

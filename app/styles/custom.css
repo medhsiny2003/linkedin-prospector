@@ -1,156 +1,243 @@
 /* ==============================================================================
-   Assistant de Prospection LinkedIn (V3.1) - Feuille de styles personnalisée
-   Palette : LinkedIn Blue (#0A66C2), Dark Slate (#191919), Off-White (#F3F6F8)
+   LinkedIn Prospector V3.1 - Design System Pro
+   Palette : Dégradé LinkedIn (#0A66C2 -> #004182), Vert (#057642), Ambre (#D97706)
    ============================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
 
 html, body, [class*="css"] {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    color: #191919;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #1E293B;
 }
 
-/* En-têtes & Titres */
-h1, h2, h3, h4 {
-    font-weight: 700 !important;
-    color: #0A66C2 !important;
+/* En-tête avec dégradé LinkedIn */
+.pro-header {
+    background: linear-gradient(135deg, #0A66C2 0%, #004182 100%);
+    border-radius: 16px;
+    padding: 24px 32px;
+    color: #FFFFFF !important;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 24px rgba(10, 102, 194, 0.2);
+    position: relative;
+    overflow: hidden;
 }
 
-/* Cartes Métriques (KPI Cards) */
-.metric-card {
+.pro-header::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.pro-header h1 {
+    color: #FFFFFF !important;
+    font-weight: 800 !important;
+    font-size: 1.9rem !important;
+    margin: 0 0 6px 0 !important;
+    letter-spacing: -0.5px;
+}
+
+.pro-header p {
+    color: #E2E8F0 !important;
+    font-size: 0.95rem;
+    margin: 0 !important;
+    font-weight: 400;
+}
+
+/* Cartes Métriques KPIs */
+.kpi-card {
     background: #FFFFFF;
-    border-radius: 12px;
-    padding: 20px 24px;
-    border: 1px solid #E0E4E8;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    margin-bottom: 16px;
+    border-radius: 14px;
+    padding: 20px;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    height: 100%;
 }
 
-.metric-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(10, 102, 194, 0.12);
-    border-color: #70B5F9;
+.kpi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(10, 102, 194, 0.1);
+    border-color: #93C5FD;
 }
 
-.metric-title {
-    font-size: 0.85rem;
-    font-weight: 600;
+.kpi-card.kpi-blue { border-top: 4px solid #0A66C2; }
+.kpi-card.kpi-purple { border-top: 4px solid #8B5CF6; }
+.kpi-card.kpi-green { border-top: 4px solid #10B981; }
+.kpi-card.kpi-amber { border-top: 4px solid #F59E0B; }
+
+.kpi-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.kpi-title {
+    font-size: 0.8rem;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: #666666;
+    letter-spacing: 0.6px;
+    color: #64748B;
+}
+
+.kpi-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+.kpi-icon.blue { background: #EFF6FF; color: #0A66C2; }
+.kpi-icon.purple { background: #F5F3FF; color: #8B5CF6; }
+.kpi-icon.green { background: #ECFDF5; color: #10B981; }
+.kpi-icon.amber { background: #FFFBEB; color: #F59E0B; }
+
+.kpi-value {
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: #0F172A;
+    line-height: 1.1;
     margin-bottom: 6px;
 }
 
-.metric-value {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #0A66C2;
-    line-height: 1.2;
-}
-
-.metric-delta {
-    font-size: 0.82rem;
+.kpi-subtitle {
+    font-size: 0.8rem;
+    color: #64748B;
     font-weight: 500;
-    margin-top: 4px;
 }
 
-.metric-delta.positive {
-    color: #057642;
-}
-
-.metric-delta.neutral {
-    color: #666666;
+/* Séparateur Visuel */
+.pro-divider {
+    height: 1px;
+    background: linear-gradient(90deg, rgba(10, 102, 194, 0.2) 0%, rgba(226, 232, 240, 0.8) 50%, rgba(10, 102, 194, 0) 100%);
+    margin: 24px 0;
 }
 
 /* Badges de Statut */
 .badge-status {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 16px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
 }
 
 .badge-valide {
-    background-color: #E2EFDA;
-    color: #057642;
-    border: 1px solid #C5E0B4;
+    background-color: #ECFDF5;
+    color: #047857;
+    border: 1px solid #A7F3D0;
 }
 
 .badge-a-verifier {
-    background-color: #FFF2CC;
-    color: #B25E00;
-    border: 1px solid #FFE699;
+    background-color: #FFFBEB;
+    color: #B45309;
+    border: 1px solid #FDE68A;
 }
 
-.badge-non-verifiable {
-    background-color: #FCE4D6;
-    color: #B92B27;
-    border: 1px solid #F8CBAD;
+.badge-invalide {
+    background-color: #FEF2F2;
+    color: #B91C1C;
+    border: 1px solid #FECACA;
 }
 
-/* Console de Logs en Direct */
-.log-console {
-    background-color: #1E222B;
-    color: #E6EDF3;
-    font-family: 'Consolas', 'Fira Code', monospace;
-    font-size: 0.85rem;
-    padding: 16px;
-    border-radius: 8px;
-    height: 320px;
-    overflow-y: auto;
-    border: 1px solid #30363D;
-    line-height: 1.5;
+.badge-tier {
+    background: #EFF6FF;
+    color: #1D4ED8;
+    border: 1px solid #BFDBFE;
+    font-weight: 600;
 }
 
-.log-entry {
-    margin-bottom: 4px;
-    word-break: break-all;
+/* Sidebar Stylisée */
+section[data-testid="stSidebar"] {
+    background-color: #F8FAFC !important;
+    border-right: 1px solid #E2E8F0 !important;
 }
 
-.log-info {
-    color: #70B5F9;
-}
-
-.log-warn {
-    color: #E68A00;
-}
-
-.log-error {
-    color: #FF7B72;
-}
-
-.log-success {
-    color: #7EE787;
-}
-
-/* Boutons d'Action Principaux */
-.stButton > button {
-    border-radius: 8px !important;
+section[data-testid="stSidebar"] .stButton > button {
+    border-radius: 10px !important;
     font-weight: 600 !important;
     transition: all 0.2s ease !important;
 }
 
-.primary-btn button {
-    background-color: #0A66C2 !important;
+/* Boutons d'Action Principaux */
+.stButton > button[kind="primary"] {
+    background: linear-gradient(135deg, #0A66C2 0%, #004182 100%) !important;
     color: #FFFFFF !important;
     border: none !important;
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+    padding: 10px 20px !important;
+    box-shadow: 0 4px 12px rgba(10, 102, 194, 0.25) !important;
+    transition: all 0.2s ease !important;
 }
 
-.primary-btn button:hover {
-    background-color: #004182 !important;
-    box-shadow: 0 4px 12px rgba(10, 102, 194, 0.3) !important;
+.stButton > button[kind="primary"]:hover {
+    box-shadow: 0 6px 18px rgba(10, 102, 194, 0.4) !important;
+    transform: translateY(-1px) !important;
 }
 
-/* Encadré d'Avertissement Sécurité */
-.security-card {
-    background-color: #FEF7EE;
-    border-left: 4px solid #E68A00;
-    padding: 14px 18px;
-    border-radius: 4px 8px 8px 4px;
+/* Carte Container */
+.pro-card {
+    background: #FFFFFF;
+    border-radius: 14px;
+    padding: 24px;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.02);
     margin-bottom: 20px;
-    font-size: 0.9rem;
-    color: #663C00;
+}
+
+.pro-card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0F172A;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Liste des Contacts Récents */
+.contact-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid #F1F5F9;
+    margin-bottom: 8px;
+    background: #FAFAFA;
+    transition: all 0.2s ease;
+}
+
+.contact-item:hover {
+    background: #F0F7FF;
+    border-color: #BAE6FD;
+}
+
+.contact-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0A66C2 0%, #004182 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
 }
