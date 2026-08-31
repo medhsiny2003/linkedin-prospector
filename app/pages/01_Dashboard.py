@@ -5,17 +5,16 @@ Visualisation des métriques clés (KPIs), graphiques d'analyse et derniers cont
 
 import sys
 from pathlib import Path
-import streamlit as st
 
 # Resolution universelle et robuste des chemins
-current_file_dir = Path(__file__).resolve().parent
+current_file = Path(__file__).resolve()
 PROJECT_ROOT = None
-for cand in [current_file_dir, current_file_dir.parent, current_file_dir.parent.parent]:
-    if (cand / "config.py").exists():
-        PROJECT_ROOT = cand
+for parent in [current_file.parent, current_file.parent.parent, current_file.parent.parent.parent]:
+    if (parent / "config.py").exists():
+        PROJECT_ROOT = parent
         break
 if not PROJECT_ROOT:
-    PROJECT_ROOT = current_file_dir.parent
+    PROJECT_ROOT = current_file.parent.parent
 
 APP_DIR = PROJECT_ROOT / "app"
 for p in [str(PROJECT_ROOT), str(APP_DIR)]:

@@ -5,10 +5,18 @@ Recherche textuelle multi-colonnes, filtres par entreprise/statut, et actions gr
 
 import sys
 from pathlib import Path
-import streamlit as st
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-APP_DIR = Path(__file__).resolve().parent.parent
+# Resolution universelle et robuste des chemins
+current_file = Path(__file__).resolve()
+PROJECT_ROOT = None
+for parent in [current_file.parent, current_file.parent.parent, current_file.parent.parent.parent]:
+    if (parent / "config.py").exists():
+        PROJECT_ROOT = parent
+        break
+if not PROJECT_ROOT:
+    PROJECT_ROOT = current_file.parent.parent
+
+APP_DIR = PROJECT_ROOT / "app"
 for p in [str(PROJECT_ROOT), str(APP_DIR)]:
     if p not in sys.path:
         sys.path.insert(0, p)
