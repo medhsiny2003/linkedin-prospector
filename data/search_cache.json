@@ -10428,5 +10428,105 @@
         "domain": "orange.ma"
       }
     ]
+  },
+  "orange maroc___ingénieur systèmes & réseaux___casablanca, rabat, benguerir, maroc": {
+    "timestamp": 1788158720.7379553,
+    "data": [
+      {
+        "first_name": "Rémy",
+        "last_name": "Olieric",
+        "job_title": "Ingénieur Radio",
+        "company": "Orange Maroc",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://fr.linkedin.com/in/remy-olieric",
+        "matched_keywords": "Orange Maroc, \"Ingénieur Systèmes & Réseaux\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "orange.ma"
+      },
+      {
+        "first_name": "Gérald",
+        "last_name": "Vallet",
+        "job_title": "Directeur Régional chez Orange Cyberdefense ...",
+        "company": "Orange Maroc",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://fr.linkedin.com/in/g%C3%A9rald-vallet-06975215",
+        "matched_keywords": "Orange Maroc, \"Ingénieur Systèmes & Réseaux\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "orange.ma"
+      }
+    ]
+  },
+  "inwi___responsable recrutement___casablanca, rabat, benguerir, maroc": {
+    "timestamp": 1788158724.4606779,
+    "data": [
+      {
+        "first_name": "Montasir",
+        "last_name": "Fouad",
+        "job_title": "Responsable Recrutement chez inwi",
+        "company": "inwi",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/montasir-fouad-ba245b77",
+        "matched_keywords": "inwi, Responsable Recrutement (Yahoo Spider)",
+        "domain": "inwi.ma"
+      },
+      {
+        "first_name": "Meizar",
+        "last_name": "Reda",
+        "job_title": "Directeur commercial PME",
+        "company": "inwi",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/meizar-reda-8719908a",
+        "matched_keywords": "inwi, Responsable Recrutement (Yahoo Spider)",
+        "domain": "inwi.ma"
+      },
+      {
+        "first_name": "Rajaa",
+        "last_name": "Bakkal",
+        "job_title": "inwi",
+        "company": "inwi",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/rajaa-bakkal-299b41176",
+        "matched_keywords": "inwi, Responsable Recrutement (Yahoo Spider)",
+        "domain": "inwi.ma"
+      },
+      {
+        "first_name": "Adil",
+        "last_name": "Nsabi",
+        "job_title": "Responsable agence chez inwi",
+        "company": "inwi",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/adil-nsabi-58a0a4171",
+        "matched_keywords": "inwi, Responsable Recrutement (Yahoo Spider)",
+        "domain": "inwi.ma"
+      },
+      {
+        "first_name": "Mohammed",
+        "last_name": "Benmahjoub",
+        "job_title": "Directeur Général -- Entreprise ...",
+        "company": "inwi",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/mohammed-benmahjoub-02b08411",
+        "matched_keywords": "inwi, Responsable Recrutement (Yahoo Spider)",
+        "domain": "inwi.ma"
+      },
+      {
+        "first_name": "Manal",
+        "last_name": "Kasimi",
+        "job_title": "Responsable de projet chez inwi",
+        "company": "inwi",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/manal-kasimi-15302438b",
+        "matched_keywords": "inwi, Responsable Recrutement (Yahoo Spider)",
+        "domain": "inwi.ma"
+      },
+      {
+        "first_name": "Loubna",
+        "last_name": "Touargui",
+        "job_title": "Manager régional",
+        "company": "inwi",
+        "location": "Casablanca, Rabat, Benguerir, Maroc",
+        "profile_url": "https://ma.linkedin.com/in/loubna-touargui-665aa1b6/en",
+        "matched_keywords": "inwi, Responsable Recrutement (Yahoo Spider)",
+        "domain": "inwi.ma"
+      }
+    ]
   }
 }
