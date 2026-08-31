@@ -94,9 +94,12 @@ async def main():
         import traceback
         traceback.print_exc()
     
-    # 5. Exportation du fichier Excel final
-    excel_path = excel_exporter.export_from_db()
-    print(f"[EXPORT] Fichier Excel généré : {excel_path}")
+    # 5. Exportation finale : contacts_stage.xlsx contient déjà les contacts de cette session
+    # contacts_historique.xlsx contient la base cumulée de toutes les sessions précédentes
+    stage_path = excel_exporter.output_path
+    history_path = excel_exporter.history_path
+    print(f"[EXPORT] Fichier Excel session : {stage_path} ({total_found} nouveaux contacts)")
+    print(f"[EXPORT] Fichier Excel historique : {history_path} (base cumulée)")
 
 
 if __name__ == "__main__":
