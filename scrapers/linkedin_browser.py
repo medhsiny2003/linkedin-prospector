@@ -50,6 +50,7 @@ class LinkedInBrowserScraper:
     def __init__(self):
         self.xray_failures = 0
         self.xray_cooldown = False
+        self.is_authenticated = False
 
     async def safe_goto(self, page: Page, url: str, timeout: int = 25000) -> bool:
         """Navigue de manière tolérante et sécurisée."""
@@ -99,18 +100,17 @@ class LinkedInBrowserScraper:
 
         exec_mode = os.getenv("EXECUTION_MODE", "cloud" if sys.platform != "win32" else "local").lower()
 
-        # --- 0. Mode Cloud / Spider Direct (0.5s par requête, 15-20 profils, zéro blocage) ---
-        if exec_mode == "cloud" or not getattr(self, "is_authenticated", False):
-            from scrapers.linkedin_spider import linkedin_spider
-            audit_logger.log_event("SPIDER_SEARCH_START", f"Activation LinkedinSpider pour {official_name} - {keywords} ({location})...")
-            spider_leads = linkedin_spider.search_profiles(official_name, keywords, location, limit=max_profiles)
-            for sl in spider_leads:
-                sl["domain"] = domain
-                extracted_profiles.append(sl)
-            
+        # --- Mode Cloud : utiliser Agent-Reach / LinkedinSpider (pas de navigateur) ---
+        if exec_mode == "cloud":
+            from scrapers.agent_reach_client import agent_reach_client
+            audit_logger.log_event("CLOUD_SEARCH_START", f"Recherche Cloud pour {official_name} - {keywords} ({location})...")
+            cloud_leads = agent_reach_client.search_profiles(official_name, keywords, location, limit=max_profiles)
+            for cl in cloud_leads:
+                cl["domain"] = domain
+                extracted_profiles.append(cl)
             audit_logger.log_event(
                 "SEARCH_COMPLETED",
-                f"{len(extracted_profiles)} profils réels extraits pour {official_name} ({keywords}) via LinkedinSpider."
+                f"{len(extracted_profiles)} profils extraits pour {official_name} ({keywords}) via Cloud."
             )
             return extracted_profiles
 
@@ -222,11 +222,7 @@ class LinkedInBrowserScraper:
         Recherche X-Ray et Multi-Moteurs résiliente.
         Combine LinkedinSpider (Yahoo / HTTP Direct) et Playwright (Bing / Google) pour garantir 100% d'extraction.
         """
-        # 1. Utilisation prioritaire du Spider Multi-Moteurs (Zéro blocage de connexion)
-        from scrapers.linkedin_spider import linkedin_spider
-        spider_leads = linkedin_spider.search_profiles(company, keywords, location=location, limit=max_profiles)
-        if spider_leads and len(spider_leads) >= 1:
-            return spider_leads
+        # Mode X-Ray : utilise la navigation Playwright Bing/Google (mode local uniquement)
 
         if self.xray_failures >= 3:
             audit_logger.log_event("CIRCUIT_BREAKER", "Circuit Breaker X-Ray actif : pause de 15s...")

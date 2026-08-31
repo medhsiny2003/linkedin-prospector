@@ -87,8 +87,8 @@ class HybridScraper:
                 context = None
                 page = None
         else:
-            audit_logger.log_event("MODE_CLOUD_DIRECT", "Mode Cloud actif : Moteur LinkedinSpider ultra-rapide sans navigateur.")
-            report(0.15, "🌐 Mode Cloud Activé : Moteur LinkedinSpider multi-moteurs 24/7...")
+            audit_logger.log_event("MODE_CLOUD_DIRECT", "Mode Cloud actif : Agent-Reach MCP + LinkedinSpider sans navigateur.")
+            report(0.15, "🌐 Mode Cloud Activé : Agent-Reach MCP + LinkedinSpider 24/7...")
 
         total_saved_leads = 0
 
@@ -111,6 +111,9 @@ class HybridScraper:
                 else:
                     report(0.20, "Simulation de navigation naturelle sur LinkedIn...")
                     await linkedin_browser_scraper.perform_decoy_activity(page)
+
+                # CRITICAL: Transmettre l'état d'authentification au scraper navigateur
+                linkedin_browser_scraper.is_authenticated = is_auth
 
             if stop_check and stop_check():
                 report(0.20, "🛑 Prospection interrompue par l'utilisateur.")
@@ -237,7 +240,8 @@ class HybridScraper:
                     await rate_limiter.check_and_apply_batch_pause()
 
         finally:
-            await stealth_browser.close()
+            if context:
+                await stealth_browser.close()
 
         # 6. Génération finale du rapport Excel
         report(0.98, "Génération et mise à jour du fichier Excel...")
