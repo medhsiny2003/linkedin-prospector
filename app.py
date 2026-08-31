@@ -25,8 +25,12 @@ if sys.platform != "win32" and not os.path.exists("/tmp/.playwright_installed"):
     except Exception:
         pass
 
-from app.components.sidebar import render_sidebar
-from app.utils.state_manager import init_session_state
+try:
+    from components.sidebar import render_sidebar
+    from utils.state_manager import init_session_state
+except ImportError:
+    from app.components.sidebar import render_sidebar
+    from app.utils.state_manager import init_session_state
 
 st.set_page_config(
     page_title="LinkedIn Prospector V3.1",
@@ -45,4 +49,10 @@ init_session_state()
 render_sidebar()
 
 # Redirection automatique vers la page Dashboard
-st.switch_page("pages/01_Dashboard.py")
+try:
+    st.switch_page("app/pages/01_Dashboard.py")
+except Exception:
+    try:
+        st.switch_page("pages/01_Dashboard.py")
+    except Exception:
+        pass
