@@ -30,22 +30,8 @@ except Exception:
     pass
 
 # 3. Injection Font Awesome 6 & Feuille de Styles Pro
-css_path = APP_DIR / "styles" / "custom.css"
-custom_css = ""
-if css_path.exists():
-    custom_css = css_path.read_text(encoding="utf-8")
-
-st.markdown(
-    f"""
-    <head>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    </head>
-    <style>
-        {custom_css}
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+from components.ui_loader import apply_custom_css
+apply_custom_css(APP_DIR)
 
 # 4. Installation silencieuse automatique de Chromium si nécessaire sur Cloud
 if sys.platform != "win32" and not os.path.exists("/tmp/.chromium_ready"):

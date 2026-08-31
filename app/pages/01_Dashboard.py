@@ -51,17 +51,8 @@ try:
 except Exception:
     pass
 
-# Chargement du style CSS & Font Awesome
-css_path = APP_DIR / "styles" / "custom.css"
-if css_path.exists():
-    with open(css_path, "r", encoding="utf-8") as f:
-        st.markdown(
-            f"""
-            <head><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></head>
-            <style>{f.read()}</style>
-            """,
-            unsafe_allow_html=True
-        )
+from components.ui_loader import apply_custom_css
+apply_custom_css(APP_DIR)
 
 init_session_state()
 render_sidebar()
