@@ -9,17 +9,22 @@ __pycache__/
 .env
 *.env.local
 
-# Sessions de navigation et logs locaux
+# Bases de données locales et fichiers temporaires
+*.db
+*.db-journal
+*.xlsx
+*.csv
+app/data/
+app/logs/
 data/sessions/
-data/leads.db
-data/leads.db-journal
-data/contacts_stage.xlsx
 data/exports/
+data/*.xlsx
+data/*.db
+data/active_config.json
 logs/*.log
 logs/*.json
-logs/audit.json
 
-# IDE
+# IDE & Windows
 .vscode/
 .idea/
 *.lnk
