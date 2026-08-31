@@ -3,6 +3,7 @@ Page 02 - Configuration des recherches, authentification et profils sauvegardés
 """
 
 import sys
+import streamlit as st
 from pathlib import Path
 
 # Resolution universelle et robuste des chemins

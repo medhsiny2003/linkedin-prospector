@@ -4,6 +4,7 @@ Recherche textuelle multi-colonnes, filtres par entreprise/statut, et actions gr
 """
 
 import sys
+import streamlit as st
 from pathlib import Path
 
 # Resolution universelle et robuste des chemins

@@ -4,6 +4,7 @@ Permet d'exporter en Excel (.xlsx) stylisé ou CSV avec sélection sur-mesure de
 """
 
 import sys
+import streamlit as st
 from pathlib import Path
 
 # Resolution universelle et robuste des chemins
