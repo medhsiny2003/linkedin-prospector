@@ -8278,5 +8278,50 @@
         "domain": "alxsystems.fr"
       }
     ]
+  },
+  "naval group belgium___embedded software engineer___international": {
+    "timestamp": 1788158090.5576777,
+    "data": [
+      {
+        "first_name": "Emmanuel",
+        "last_name": "Chol",
+        "job_title": "NAVAL GROUP",
+        "company": "Naval Group Belgium",
+        "location": "International",
+        "profile_url": "https://fr.linkedin.com/in/emmanuel-chol-945a583a",
+        "matched_keywords": "Naval Group Belgium, \"Embedded Software Engineer\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "naval-group.com"
+      },
+      {
+        "first_name": "Pierre",
+        "last_name": "Even",
+        "job_title": "Talent Acquisition Business Partner",
+        "company": "Naval Group Belgium",
+        "location": "International",
+        "profile_url": "https://fr.linkedin.com/in/pierre-even-2b51a2b6",
+        "matched_keywords": "Naval Group Belgium, \"Embedded Software Engineer\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "naval-group.com"
+      },
+      {
+        "first_name": "Geoffroy",
+        "last_name": "Gosselin",
+        "job_title": "Directeur financier",
+        "company": "Naval Group Belgium",
+        "location": "International",
+        "profile_url": "https://fr.linkedin.com/in/geoffroy-gosselin-36688447",
+        "matched_keywords": "Naval Group Belgium, \"Embedded Software Engineer\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "naval-group.com"
+      },
+      {
+        "first_name": "Guillaume",
+        "last_name": "Marit",
+        "job_title": "Recruteur IT chez Inetum",
+        "company": "Naval Group Belgium",
+        "location": "International",
+        "profile_url": "https://be.linkedin.com/in/guillaume-marit-63656582",
+        "matched_keywords": "Naval Group Belgium, \"Embedded Software Engineer\" OR \"RH\" OR \"Recruteur\" OR \"Manager\" OR \"Directeur\" OR \"Ingénieur\" OR \"Lead Tech\" (Yahoo Spider)",
+        "domain": "naval-group.com"
+      }
+    ]
   }
 }
