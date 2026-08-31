@@ -4,7 +4,7 @@ Régule les quotas journaliers et impose le respect des horaires de travail fran
 """
 
 from datetime import datetime, date, timezone, timedelta
-from typing import Tuple, Optional
+from typing import Any, Optional, Tuple, Union
 from config import config
 from core.monitoring.audit_logger import audit_logger
 
@@ -50,16 +50,30 @@ class WarmupEngine:
 
         return True, "Prospection 24/7 active (toutes heures autorisées)."
 
-    def calculate_daily_limit(self, campaign_start_date: date) -> int:
+    def calculate_daily_limit(self, campaign_start_date: Any = None) -> int:
         """
         Calcule la limite d'invitations journalières en fonction de l'ancienneté (14 jours).
+        Supporte un objet date, datetime, str, int (numéro de jour) ou None.
         - Jours 1-3 : 0 (navigation passive)
         - Jours 4-7 : 2 à 5
         - Jours 8-14 : 5 à 18
         - > 14 jours : DAILY_CONNECT_LIMIT (max 20)
         """
         today = self.get_current_paris_time().date()
-        days_active = (today - campaign_start_date).days + 1
+        if isinstance(campaign_start_date, int):
+            days_active = campaign_start_date
+        elif isinstance(campaign_start_date, datetime):
+            days_active = (today - campaign_start_date.date()).days + 1
+        elif isinstance(campaign_start_date, date):
+            days_active = (today - campaign_start_date).days + 1
+        elif isinstance(campaign_start_date, str):
+            try:
+                dt = datetime.fromisoformat(campaign_start_date).date()
+                days_active = (today - dt).days + 1
+            except Exception:
+                days_active = 1
+        else:
+            days_active = 1
 
         if days_active <= 3:
             daily_limit = 0
