@@ -37,7 +37,7 @@ except Exception:
 from components.ui_loader import apply_custom_css
 apply_custom_css(APP_DIR)
 
-init_session_state, get_active_config, save_active_config, get_saved_profiles
+from utils.state_manager import init_session_state, get_active_config, save_active_config, get_saved_profiles
 
 init_session_state()
 render_sidebar()
