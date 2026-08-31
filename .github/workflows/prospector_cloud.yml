@@ -3,12 +3,12 @@ name: LinkedIn Prospector 24-7 Cloud Engine
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 9 * * 1-5'
+    - cron: '0 9 * * *'  # Tourne 7j/7 tous les jours de l'année
 
 jobs:
   prospect:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 120
 
     steps:
       - name: Checkout repository
