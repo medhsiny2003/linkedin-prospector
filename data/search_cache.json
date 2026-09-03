@@ -17313,5 +17313,90 @@
         "domain": "flyingeye.fr"
       }
     ]
+  },
+  "flying eye___ceo___france": {
+    "timestamp": 1788437182.8392205,
+    "data": [
+      {
+        "first_name": "Jeremy",
+        "last_name": "Ladoucette",
+        "job_title": "Co-CEO at Flying Eye",
+        "company": "Flying Eye",
+        "location": "France",
+        "profile_url": "https://fr.linkedin.com/in/jeremy-ladoucette-33369970",
+        "matched_keywords": "Flying Eye, CEO (Yahoo Spider)",
+        "domain": "flyingeye.fr"
+      },
+      {
+        "first_name": "Simon",
+        "last_name": "Leroy",
+        "job_title": "Co-Founder & Managing Director",
+        "company": "Flying Eye",
+        "location": "France",
+        "profile_url": "https://fr.linkedin.com/in/simon-leroy-04ba0639",
+        "matched_keywords": "Flying Eye, CEO (Yahoo Spider)",
+        "domain": "flyingeye.fr"
+      },
+      {
+        "first_name": "Alexandre",
+        "last_name": "Thomas",
+        "job_title": "DECTYR",
+        "company": "Flying Eye",
+        "location": "France",
+        "profile_url": "https://fr.linkedin.com/in/alexandrethomas1980",
+        "matched_keywords": "Flying Eye, CEO (Yahoo Spider)",
+        "domain": "flyingeye.fr"
+      },
+      {
+        "first_name": "Francois",
+        "last_name": "Amiot",
+        "job_title": "CEO Food Industry",
+        "company": "Flying Eye",
+        "location": "France",
+        "profile_url": "https://fr.linkedin.com/in/framiot/en",
+        "matched_keywords": "Flying Eye, CEO (Yahoo Spider)",
+        "domain": "flyingeye.fr"
+      },
+      {
+        "first_name": "Maxime",
+        "last_name": "Lecchi",
+        "job_title": "Co-Founder & CEO",
+        "company": "Flying Eye",
+        "location": "France",
+        "profile_url": "https://fr.linkedin.com/in/maxime-lecchi-2047a975",
+        "matched_keywords": "Flying Eye, CEO (Yahoo Spider)",
+        "domain": "flyingeye.fr"
+      },
+      {
+        "first_name": "Csaba",
+        "last_name": "Singer",
+        "job_title": "CEO",
+        "company": "Flying Eye",
+        "location": "France",
+        "profile_url": "https://de.linkedin.com/in/csabasinger78",
+        "matched_keywords": "Flying Eye, CEO (Yahoo Spider)",
+        "domain": "flyingeye.fr"
+      },
+      {
+        "first_name": "Ludovic",
+        "last_name": "Pelletey",
+        "job_title": "CEO / R&D manager chez Dronavia",
+        "company": "Flying Eye",
+        "location": "France",
+        "profile_url": "https://fr.linkedin.com/in/ludovic-pelletey-2479765a",
+        "matched_keywords": "Flying Eye, CEO (Yahoo Spider)",
+        "domain": "flyingeye.fr"
+      },
+      {
+        "first_name": "Katherine",
+        "last_name": "Malone-France",
+        "job_title": "The Better Angels Society",
+        "company": "Flying Eye",
+        "location": "France",
+        "profile_url": "https://www.linkedin.com/in/katherine-malone-france-66790516",
+        "matched_keywords": "Flying Eye, CEO (Yahoo Spider)",
+        "domain": "flyingeye.fr"
+      }
+    ]
   }
 }
