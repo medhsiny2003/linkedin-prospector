@@ -17723,5 +17723,65 @@
         "domain": "eostechnologie.com"
       }
     ]
+  },
+  "eos technologie___ceo___france": {
+    "timestamp": 1788437212.7974007,
+    "data": [
+      {
+        "first_name": "Maxime",
+        "last_name": "Saada",
+        "job_title": "CANAL+",
+        "company": "EOS Technologie",
+        "location": "France",
+        "profile_url": "https://fr.linkedin.com/in/maxime-saada/fr",
+        "matched_keywords": "EOS Technologie, CEO (Yahoo Spider)",
+        "domain": "eostechnologie.com"
+      },
+      {
+        "first_name": "Paolo",
+        "last_name": "Ribotta",
+        "job_title": "Zurich Insurance",
+        "company": "EOS Technologie",
+        "location": "France",
+        "profile_url": "https://it.linkedin.com/in/paolo-ribotta",
+        "matched_keywords": "EOS Technologie, CEO (Yahoo Spider)",
+        "domain": "eostechnologie.com"
+      },
+      {
+        "first_name": "Hassan",
+        "last_name": "Safer-Tebbi",
+        "job_title": "Siemens Healthineers",
+        "company": "EOS Technologie",
+        "location": "France",
+        "profile_url": "https://fr.linkedin.com/in/hassan-safer-tebbi-58b915102",
+        "matched_keywords": "EOS Technologie, CEO (Yahoo Spider)",
+        "domain": "eostechnologie.com"
+      },
+      {
+        "first_name": "Muriel",
+        "last_name": "Lienau",
+        "job_title": "Chief Executive Officer, Nestlé Waters ...",
+        "company": "EOS Technologie",
+        "location": "France",
+        "profile_url": "https://fr.linkedin.com/in/muriel-lienau",
+        "matched_keywords": "EOS Technologie, CEO (Yahoo Spider)",
+        "domain": "eostechnologie.com"
+      }
+    ]
+  },
+  "eos technologie___recruteur___france": {
+    "timestamp": 1788437227.5162685,
+    "data": [
+      {
+        "first_name": "Olivier",
+        "last_name": "Gatti",
+        "job_title": "Président",
+        "company": "EOS Technologie",
+        "location": "France",
+        "profile_url": "https://fr.linkedin.com/in/olivier-gatti",
+        "matched_keywords": "EOS Technologie, Recruteur (Yahoo Spider)",
+        "domain": "eostechnologie.com"
+      }
+    ]
   }
 }
