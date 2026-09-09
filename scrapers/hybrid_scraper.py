@@ -22,22 +22,28 @@ class HybridScraper:
             )
 
     async def search(self, company: str, keywords: List[str], location: str) -> List[Contact]:
-        # Phase 1: X-Ray search
-        contacts = await self.xray.search(company, keywords, location)
-        logger.info(f"X-Ray found {len(contacts)} contacts for {company}")
+        contacts: List[Contact] = []
         
-        # Phase 2: Stealth fallback if needed
-        if len(contacts) < 5 and self.stealth:
-            logger.info(f"X-Ray insufficient, falling back to Stealth for {company}")
-            await self.stealth.setup()
-            company_slug = self._get_company_slug(company)
-            stealth_contacts = await self.stealth.search_company_people(company_slug, keywords)
-            contacts = self._merge_contacts(contacts, stealth_contacts)
+        # Phase 1: X-Ray search
+        try:
+            contacts = await self.xray.search(company, keywords, location)
+            logger.info(f"X-Ray a trouve {len(contacts)} contacts pour {company}")
+        except Exception as e:
+            logger.debug(f"Erreur X-Ray pour {company}: {e}")
+        
+        # Phase 2: Stealth fallback if X-Ray found < 3 profiles and cookie is provided
+        if len(contacts) < 3 and self.stealth:
+            logger.info(f"X-Ray insuffisant, passage au mode Stealth pour {company}")
+            try:
+                company_slug = self._get_company_slug(company)
+                stealth_contacts = await self.stealth.search_company_people(company_slug, keywords)
+                contacts = self._merge_contacts(contacts, stealth_contacts)
+            except Exception as e:
+                logger.error(f"Erreur Stealth fallback pour {company}: {e}")
         
         return contacts
 
     def _get_company_slug(self, company: str) -> str:
-        # Convert company name to LinkedIn slug
         slug = company.lower()
         slug = re.sub(r'[^a-z0-9\s-]', '', slug)
         slug = re.sub(r'\s+', '-', slug).strip('-')
@@ -45,13 +51,16 @@ class HybridScraper:
 
     def _merge_contacts(self, existing: List[Contact], new: List[Contact]) -> List[Contact]:
         merged = {c.linkedin_url: c for c in existing if c.linkedin_url}
-        
         for contact in new:
             if contact.linkedin_url and contact.linkedin_url not in merged:
                 merged[contact.linkedin_url] = contact
-                
+            elif not contact.linkedin_url:
+                merged[f"{contact.first_name}_{contact.last_name}"] = contact
         return list(merged.values())
 
     async def close(self) -> None:
         if self.stealth:
-            await self.stealth.close()
+            try:
+                await self.stealth.close()
+            except Exception:
+                pass
