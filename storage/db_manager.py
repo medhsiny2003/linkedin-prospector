@@ -1,22 +1,29 @@
 import sqlite3
 import os
-from typing import List, Dict, Optional
 import logging
+from typing import List, Dict, Optional, Any
+from datetime import datetime
+
+logger = logging.getLogger(__name__)
 
 class DatabaseManager:
+    """SQLite database manager in WAL mode for LinkedIn Prospector contacts."""
+
     def __init__(self, db_path: str = 'data/prospector.db'):
         self.db_path = db_path
         self.conn = None
         self._init_db()
 
     def _init_db(self) -> None:
-        os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
+        """Initializes tables, WAL mode, and indexes."""
+        os.makedirs(os.path.dirname(self.db_path) or 'data', exist_ok=True)
         self.conn = sqlite3.connect(self.db_path)
         self.conn.row_factory = sqlite3.Row
         
         cursor = self.conn.cursor()
-        cursor.execute("PRAGMA journal_mode=WAL")
+        cursor.execute("PRAGMA journal_mode=WAL;")
         
+        # Contacts table
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS contacts (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -37,42 +44,80 @@ class DatabaseManager:
             );
         """)
         
+        # Indexes for fast querying & analytics
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_contacts_company ON contacts(company);")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_contacts_status ON contacts(mx_status);")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_contacts_score ON contacts(confidence_score);")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_contacts_date ON contacts(extraction_date);")
+        
         self.conn.commit()
 
-    def insert_contact(self, contact) -> Optional[int]:
+    def insert_contact(self, contact: Any) -> Optional[int]:
+        """Inserts or updates a contact record."""
         try:
             cursor = self.conn.cursor()
+            
+            # Handle both Contact dataclass and dict
+            if isinstance(contact, dict):
+                first_name = contact.get('first_name', '')
+                last_name = contact.get('last_name', '')
+                title = contact.get('title', '')
+                company = contact.get('company', '')
+                email = contact.get('email', '')
+                email_alt1 = contact.get('email_alt1', '')
+                email_alt2 = contact.get('email_alt2', '')
+                score = contact.get('confidence_score', 0)
+                mx_status = contact.get('mx_status', 'unknown')
+                mx_active = contact.get('mx_active', '')
+                linkedin_url = contact.get('linkedin_url', '')
+                extraction_date = contact.get('extraction_date', datetime.now().isoformat())
+                source = contact.get('source', 'xray')
+            else:
+                first_name = getattr(contact, 'first_name', '')
+                last_name = getattr(contact, 'last_name', '')
+                title = getattr(contact, 'title', '')
+                company = getattr(contact, 'company', '')
+                email = getattr(contact, 'email', '')
+                email_alt1 = getattr(contact, 'email_alt1', '')
+                email_alt2 = getattr(contact, 'email_alt2', '')
+                score = getattr(contact, 'confidence_score', 0)
+                mx_status = getattr(contact, 'mx_status', 'unknown')
+                mx_active = getattr(contact, 'mx_active', '')
+                linkedin_url = getattr(contact, 'linkedin_url', '')
+                extraction_date = getattr(contact, 'extraction_date', datetime.now().isoformat())
+                source = getattr(contact, 'source', 'xray')
+
             cursor.execute("""
                 INSERT OR REPLACE INTO contacts (
                     first_name, last_name, title, company, email, email_alt1, email_alt2,
                     confidence_score, mx_status, mx_active, linkedin_url, extraction_date, source
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
-                contact.first_name, contact.last_name, contact.title, contact.company,
-                contact.email, contact.email_alt1, contact.email_alt2, contact.confidence_score,
-                contact.mx_status, contact.mx_active, contact.linkedin_url,
-                contact.extraction_date, contact.source
+                first_name, last_name, title, company,
+                email, email_alt1, email_alt2, score,
+                mx_status, str(mx_active), linkedin_url,
+                extraction_date, source
             ))
             self.conn.commit()
             return cursor.lastrowid
         except Exception as e:
-            logging.error(f"Error inserting contact: {e}")
+            logger.error(f"Error inserting contact: {e}")
             return None
 
-    def get_all_contacts(self) -> List[Dict]:
+    def get_all_contacts(self) -> List[Dict[str, Any]]:
+        """Retrieves all contacts sorted by company and last name."""
         cursor = self.conn.cursor()
         cursor.execute("SELECT * FROM contacts ORDER BY company, last_name")
         return [dict(row) for row in cursor.fetchall()]
 
-    def get_contacts_by_company(self, company: str) -> List[Dict]:
+    def get_contacts_by_company(self, company: str) -> List[Dict[str, Any]]:
+        """Retrieves contacts for a specific company."""
         cursor = self.conn.cursor()
         cursor.execute("SELECT * FROM contacts WHERE company = ? ORDER BY last_name", (company,))
         return [dict(row) for row in cursor.fetchall()]
 
-    def get_stats(self) -> Dict:
+    def get_stats(self) -> Dict[str, Any]:
+        """Calculates KPI statistics over stored contacts."""
         cursor = self.conn.cursor()
         stats = {}
         
@@ -91,7 +136,8 @@ class DatabaseManager:
         
         return stats
 
-    def search_contacts(self, query: str) -> List[Dict]:
+    def search_contacts(self, query: str) -> List[Dict[str, Any]]:
+        """Performs full-text search across contacts."""
         cursor = self.conn.cursor()
         search_term = f"%{query}%"
         cursor.execute("""
@@ -101,12 +147,18 @@ class DatabaseManager:
         """, (search_term, search_term, search_term, search_term))
         return [dict(row) for row in cursor.fetchall()]
 
-    def export_to_dicts(self) -> List[Dict]:
+    def export_to_dicts(self) -> List[Dict[str, Any]]:
+        """Exports all records as list of dictionaries."""
         return self.get_all_contacts()
 
     def close(self) -> None:
+        """Closes active database connection."""
         if self.conn:
-            self.conn.close()
+            try:
+                self.conn.close()
+            except Exception:
+                pass
+            self.conn = None
 
     def __enter__(self):
         return self

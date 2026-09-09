@@ -1,92 +1,71 @@
-"""Rate limiting and circuit breaker implementation."""
-
-import asyncio
 import time
 import random
-from typing import Dict, Any
-from .logger import setup_logger
+import asyncio
+import logging
 
-logger = setup_logger(__name__)
+from .circuit_breaker import CircuitBreaker
+
+logger = logging.getLogger(__name__)
 
 class RateLimiter:
-    """Token bucket rate limiter with circuit breaker."""
-    
-    def __init__(self, rpm: int = 20, min_delay: float = 2.0, max_delay: float = 7.0, circuit_breaker_threshold: int = 3):
+    """
+    Rate Limiter with human-like jitter, exponential backoff, and Circuit Breaker integration.
+    """
+    def __init__(self, rpm: int = 20, jitter_min: float = 5.0, jitter_max: float = 15.0):
+        """
+        Initializes the Rate Limiter.
+        
+        Args:
+            rpm: Requests per minute limit.
+            jitter_min: Minimum random delay between requests in seconds.
+            jitter_max: Maximum random delay between requests in seconds.
+        """
         self.rpm = rpm
-        self.min_delay = min_delay
-        self.max_delay = max_delay
-        self.circuit_breaker_threshold = circuit_breaker_threshold
-        
-        self.interval = 60.0 / rpm if rpm > 0 else 0
+        self.jitter_min = jitter_min
+        self.jitter_max = jitter_max
+        self.min_interval = 60.0 / rpm if rpm > 0 else 0.0
         self.last_request_time = 0.0
-        
-        self.consecutive_failures = 0
-        self.total_requests = 0
-        self.total_failures = 0
-        self.circuit_open = False
-        self.backoff_time = 60.0  # Initial backoff time
-        
+        self.circuit_breaker = CircuitBreaker()
+        self.consecutive_errors = 0
+
     async def wait(self) -> None:
-        """Wait appropriate time before next request, handling circuit breaker."""
-        if self.circuit_open:
-            logger.warning(f"Circuit open. Waiting for {self.backoff_time} seconds before retrying.")
-            await asyncio.sleep(self.backoff_time)
-            # Reset circuit to half-open state (one try allowed)
-            self.circuit_open = False
-            return
+        """
+        Wait for the appropriate amount of time before the next request.
+        Integrates RPM limits, human jitter, exponential backoff, and circuit breaker.
+        """
+        # Wait if circuit breaker is OPEN
+        while not self.circuit_breaker.allow_request():
+            logger.warning("RateLimiter: Circuit breaker is OPEN. Waiting for reset...")
+            await asyncio.sleep(10)
 
         now = time.time()
         time_since_last = now - self.last_request_time
         
-        # Calculate base delay from rpm
-        delay = max(0.0, self.interval - time_since_last)
+        # Calculate human jitter delay
+        jitter = random.uniform(self.jitter_min, self.jitter_max)
         
-        # Add random jitter between min and max delay
-        jitter = random.uniform(self.min_delay, self.max_delay)
-        total_delay = delay + jitter
+        # Calculate delay based on RPM
+        required_delay = max(0.0, self.min_interval - time_since_last)
+        
+        # Exponential backoff based on recent transient errors
+        backoff = 0.0
+        if self.consecutive_errors > 0:
+            backoff = (2 ** min(self.consecutive_errors, 6)) + random.uniform(0, 1)
+            
+        total_delay = max(required_delay, jitter) + backoff
         
         if total_delay > 0:
-            logger.debug(f"Rate limiting: sleeping for {total_delay:.2f}s")
+            logger.debug(f"RateLimiter: Waiting for {total_delay:.2f} seconds...")
             await asyncio.sleep(total_delay)
             
         self.last_request_time = time.time()
-        self.total_requests += 1
-        
+
     def record_success(self) -> None:
-        """Record a successful request and reset failure counters."""
-        if self.consecutive_failures > 0:
-            logger.info("Request successful, resetting circuit breaker.")
-        self.consecutive_failures = 0
-        self.backoff_time = 60.0  # Reset backoff time
-        
+        """Record a successful request."""
+        self.consecutive_errors = 0
+        self.circuit_breaker.record_success()
+
     def record_failure(self) -> None:
-        """Record a failure and potentially trip the circuit breaker."""
-        self.consecutive_failures += 1
-        self.total_failures += 1
-        logger.warning(f"Request failed. Consecutive failures: {self.consecutive_failures}")
-        
-        if self.consecutive_failures >= self.circuit_breaker_threshold:
-            self.circuit_open = True
-            self.backoff_time *= 2  # Exponential backoff
-            logger.error(f"Circuit breaker tripped! Next backoff: {self.backoff_time}s")
-            
-    def is_circuit_open(self) -> bool:
-        """Check if the circuit is currently open."""
-        return self.circuit_open
-        
-    def reset(self) -> None:
-        """Reset the rate limiter state completely."""
-        self.last_request_time = 0.0
-        self.consecutive_failures = 0
-        self.circuit_open = False
-        self.backoff_time = 60.0
-        
-    def get_stats(self) -> Dict[str, Any]:
-        """Get current statistics of the rate limiter."""
-        return {
-            "total_requests": self.total_requests,
-            "total_failures": self.total_failures,
-            "consecutive_failures": self.consecutive_failures,
-            "circuit_open": self.circuit_open,
-            "current_backoff": self.backoff_time
-        }
+        """Record a failed request (e.g., rate limit, network error)."""
+        self.consecutive_errors += 1
+        self.circuit_breaker.record_failure()

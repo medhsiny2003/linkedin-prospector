@@ -168,6 +168,7 @@ class Orchestrator:
         """Process all keywords for a given company."""
         all_contacts: List[Contact] = []
         skip_keyword = bool(start_keyword)
+        consecutive_failures = 0
 
         for keyword in self.config.keywords:
             if skip_keyword and keyword != start_keyword:
@@ -183,6 +184,7 @@ class Orchestrator:
                 contacts = await self._process_keyword(company, keyword)
                 all_contacts.extend(contacts)
                 self.rate_limiter.record_success()
+                consecutive_failures = 0
 
                 self.checkpoint.update_progress(
                     company=company,
@@ -190,11 +192,28 @@ class Orchestrator:
                     contact_id=self.current_contact_id,
                     total=self.total_contacts_processed,
                 )
+                
+                logger.info(f"    [Metrics] Success: {len(contacts)} new profiles. Total processed: {self.total_contacts_processed}. Current company progress saved.")
 
             except Exception as exc:
                 logger.error(f"Error processing {company} / {keyword}: {exc}")
                 self.rate_limiter.record_failure()
                 self.checkpoint.mark_failed(f"{company}:{keyword}")
+                consecutive_failures += 1
+                
+                if consecutive_failures >= 3:
+                    logger.warning(f"Circuit Breaker Triggered: 3 consecutive failures for {company}. Pausing 5 minutes and skipping to next company.")
+                    await asyncio.sleep(300)
+                    break
+
+        # Save state after completing all keywords for this company
+        if self.config.keywords:
+            self.checkpoint.update_progress(
+                company=company,
+                keyword=self.config.keywords[-1],
+                contact_id=self.current_contact_id,
+                total=self.total_contacts_processed,
+            )
 
         return all_contacts
 

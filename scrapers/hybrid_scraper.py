@@ -31,15 +31,17 @@ class HybridScraper:
         except Exception as e:
             logger.debug(f"Erreur X-Ray pour {company}: {e}")
         
-        # Phase 2: Stealth fallback if X-Ray found < 3 profiles and cookie is provided
-        if len(contacts) < 3 and self.stealth:
-            logger.info(f"X-Ray insuffisant, passage au mode Stealth pour {company}")
+        # Phase 2: Stealth fallback if X-Ray found < 5 profiles and cookie is provided
+        if len(contacts) < 5 and self.stealth:
+            logger.info(f"X-Ray yielded {len(contacts)} contacts (< 5). Switching to Stealth fallback for {company}")
             try:
                 company_slug = self._get_company_slug(company)
                 stealth_contacts = await self.stealth.search_company_people(company_slug, keywords)
                 contacts = self._merge_contacts(contacts, stealth_contacts)
             except Exception as e:
                 logger.error(f"Erreur Stealth fallback pour {company}: {e}")
+        elif len(contacts) < 5 and not self.stealth:
+            logger.info(f"X-Ray yielded {len(contacts)} contacts (< 5), but no valid stealth session is configured.")
         
         return contacts
 

@@ -3,6 +3,8 @@ import re
 from typing import List, Tuple
 
 class EmailGenerator:
+    """Generates 22 email permutations across Light, Medium, and Heavy tiers with confidence scores."""
+
     PATTERNS = {
         'light': [
             ('{first}.{last}@{domain}', 95),
@@ -50,17 +52,20 @@ class EmailGenerator:
     }
 
     def _normalize_name(self, name: str) -> str:
+        """Removes accents, lowercase, and non-alphanumeric characters."""
         if not name:
             return ""
         name = ''.join(c for c in unicodedata.normalize('NFD', name) if unicodedata.category(c) != 'Mn')
-        name = name.lower()
-        name = name.replace('-', '')
+        name = name.lower().strip()
+        name = name.replace('-', '').replace(' ', '')
         name = re.sub(r'[^a-z0-9]', '', name)
         return name
 
     def generate(self, first_name: str, last_name: str, domain: str, level: str = 'medium') -> List[Tuple[str, int]]:
+        """Generates sorted email permutations with confidence scores."""
         norm_first = self._normalize_name(first_name)
         norm_last = self._normalize_name(last_name)
+        domain = domain.lower().strip()
         
         if not norm_first or not norm_last or not domain:
             return []
@@ -81,9 +86,11 @@ class EmailGenerator:
         return sorted(emails, key=lambda x: x[1], reverse=True)
 
     def get_best_email(self, first_name: str, last_name: str, domain: str, level: str = 'medium') -> Tuple[str, int]:
+        """Returns the highest scored email candidate."""
         emails = self.generate(first_name, last_name, domain, level)
         return emails[0] if emails else ("", 0)
 
     def get_top_n_emails(self, first_name: str, last_name: str, domain: str, n: int = 3, level: str = 'medium') -> List[Tuple[str, int]]:
+        """Returns the top N candidates by confidence score."""
         emails = self.generate(first_name, last_name, domain, level)
         return emails[:n]

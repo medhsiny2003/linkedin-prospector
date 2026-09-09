@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  prospector:
+    build: .
+    image: linkedin-prospector:v3.2
+    container_name: linkedin-prospector
+    volumes:
+      - ./data:/app/data
+      - ./output:/app/output
+    environment:
+      - LINKEDIN_COOKIES=${LINKEDIN_COOKIES}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    restart: unless-stopped
