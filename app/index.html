@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Prospector V3.2</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- SheetJS for Excel export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>LinkedIn Prospector V3.2</h1>
+            <p class="subtitle">Outil de Prospection Professionnelle</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Configuration Section -->
+        <section class="card config-section">
+            <h2>⚙️ Configuration</h2>
+            <div class="config-grid">
+                <div class="form-group">
+                    <label for="companies">Entreprises (une par ligne)</label>
+                    <textarea id="companies" placeholder="Thales&#10;Airbus&#10;Safran"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="keywords">Mots-clés / Rôles (un par ligne)</label>
+                    <textarea id="keywords" placeholder="Responsable RH&#10;Recruteur&#10;Talent Acquisition&#10;Manager"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="location">Localisation</label>
+                    <input type="text" id="location" placeholder="France">
+                </div>
+                <div class="form-group">
+                    <label for="email_level">Niveau de recherche d'email</label>
+                    <select id="email_level">
+                        <option value="light">Light</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="heavy">Heavy</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="max_results">Résultats max par entreprise</label>
+                    <input type="number" id="max_results" value="50" min="1">
+                </div>
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="smtp_check">
+                    <label for="smtp_check">Activer la validation SMTP</label>
+                </div>
+            </div>
+            <div class="actions">
+                <button id="btn-generate-config" class="btn primary">📥 Télécharger config.json</button>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="card results-section">
+            <h2>📄 Résultats</h2>
+            
+            <div id="drop-zone" class="drop-zone">
+                <p>Glissez-déposez le fichier <strong>results.json</strong> ici ou cliquez pour sélectionner</p>
+                <input type="file" id="file-input" accept=".json">
+            </div>
+
+            <div id="results-container" class="hidden">
+                <div class="results-header">
+                    <input type="text" id="search-input" placeholder="🔍 Rechercher dans les résultats...">
+                    <div class="export-actions">
+                        <button id="btn-export-excel" class="btn success">📊 Exporter Excel</button>
+                        <button id="btn-copy-emails" class="btn secondary">📋 Copier les emails</button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table id="results-table">
+                        <thead>
+                            <tr>
+                                <th data-sort="id">ID ↕</th>
+                                <th data-sort="first_name">Prénom ↕</th>
+                                <th data-sort="last_name">Nom ↕</th>
+                                <th data-sort="position">Poste ↕</th>
+                                <th data-sort="company">Entreprise ↕</th>
+                                <th data-sort="email">Email ↕</th>
+                                <th data-sort="score">Score ↕</th>
+                                <th data-sort="mx_status">Statut MX ↕</th>
+                                <th data-sort="mx_server">Serveur MX ↕</th>
+                                <th data-sort="linkedin_url">URL LinkedIn ↕</th>
+                                <th data-sort="date">Date ↕</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <!-- Table rows will be inserted here by JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination">
+                    <button id="btn-prev-page" class="btn small" disabled>Précédent</button>
+                    <span id="page-info">Page 1 / 1</span>
+                    <button id="btn-next-page" class="btn small" disabled>Suivant</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard-section" class="card dashboard-section hidden">
+            <h2>📊 Statistiques</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Contacts</h3>
+                    <div id="stat-total" class="stat-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Score Moyen</h3>
+                    <div id="stat-avg-score" class="stat-value">0%</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Emails Valides (MX)</h3>
+                    <div id="stat-mx-valid" class="stat-value">0%</div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3>Contacts par Entreprise</h3>
+                    <div id="company-chart" class="css-chart"></div>
+                </div>
+                <div class="chart-container">
+                    <h3>Distribution des Scores</h3>
+                    <div id="score-chart" class="css-chart"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <p>LinkedIn Prospector V3.2 | <a href="https://github.com/placeholder/linkedin-prospector" target="_blank">GitHub</a></p>
+            <p class="disclaimer">⚠️ Avis de non-responsabilité: Cet outil doit être utilisé de manière éthique et conformément aux conditions d'utilisation de LinkedIn et aux lois sur la protection des données (RGPD).</p>
+        </div>
+    </footer>
+
+    <div id="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>

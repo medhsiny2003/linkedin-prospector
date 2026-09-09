@@ -1,0 +1,81 @@
+name: LinkedIn Prospector V3.2
+
+on:
+  workflow_dispatch:
+    inputs:
+      config_file:
+        description: 'Path to config.json file'
+        required: false
+        default: 'config/default.json'
+  schedule:
+    - cron: '0 6 * * 1-5'  # Monday to Friday at 6 AM UTC
+
+jobs:
+  prospect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          playwright install chromium
+          playwright install-deps
+      
+      - name: Run Prospector
+        env:
+          LI_AT_COOKIE: ${{ secrets.LI_AT_COOKIE }}
+          PROXY_URL: ${{ secrets.PROXY_URL }}
+        run: |
+          python cloud_runner.py --config ${{ github.event.inputs.config_file || 'config/default.json' }}
+      
+      - name: Upload Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: prospector-results-${{ github.run_number }}
+          path: |
+            output/*.xlsx
+            output/*.json
+            data/prospector.db
+            logs/*.log
+          retention-days: 30
+      
+      - name: Summary
+        if: always()
+        run: |
+          if [ -f output/summary.json ]; then
+            echo '## 📊 Prospector Results' >> $GITHUB_STEP_SUMMARY
+            echo '```json' >> $GITHUB_STEP_SUMMARY
+            cat output/summary.json >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
+
+  deploy-pages:
+    runs-on: ubuntu-latest
+    needs: prospect
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v4
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'app'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

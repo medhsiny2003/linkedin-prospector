@@ -1,0 +1,15 @@
+{
+  "companies": ["Thales", "Airbus", "Safran", "Dassault"],
+  "keywords": ["Responsable RH", "Recruteur", "Talent Acquisition", "DRH", "Manager", "Ingénieur"],
+  "location": "France",
+  "max_results_per_company": 50,
+  "email_level": "medium",
+  "enable_smtp_check": false,
+  "rate_limit_rpm": 20,
+  "min_delay": 2.0,
+  "max_delay": 7.0,
+  "circuit_breaker_threshold": 3,
+  "warm_up_days": 14,
+  "daily_profile_limit": 200,
+  "daily_search_limit": 50
+}
