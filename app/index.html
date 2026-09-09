@@ -51,7 +51,21 @@
                 </div>
             </div>
             <div class="actions">
+                <button id="btn-start-scraping" class="btn success" style="font-weight: bold; padding: 12px 24px; font-size: 1.05rem;">🚀 Lancer la Prospection</button>
+                <button id="btn-stop-scraping" class="btn danger hidden" style="font-weight: bold; padding: 12px 24px;">⏹️ Arrêter</button>
                 <button id="btn-generate-config" class="btn primary">📥 Télécharger config.json</button>
+                <button id="btn-open-folder" class="btn secondary">📁 Ouvrir Dossier Résultats</button>
+            </div>
+        </section>
+
+        <!-- Live Progress & Console Section -->
+        <section id="console-section" class="card console-section hidden">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h2>⚡ Console d'Exécution en Direct</h2>
+                <span id="status-badge" class="badge badge-warning">En cours...</span>
+            </div>
+            <div id="live-logs" class="live-logs-container" style="background: #0b111e; color: #a9b7d0; font-family: 'Consolas', monospace; font-size: 0.85rem; padding: 15px; border-radius: 8px; max-height: 220px; overflow-y: auto; border: 1px solid #1f2d48;">
+                <div>[INFO] En attente de démarrage...</div>
             </div>
         </section>
 
