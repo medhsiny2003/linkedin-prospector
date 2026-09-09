@@ -1,178 +1,122 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LinkedIn Prospector V3.2 - Dashboard</title>
+    <title>LinkedIn Prospector V3.2 — Supervision & Prospection</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- SheetJS pour export Excel 100% côté client (GitHub Pages) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="brand">
-                <i class="fab fa-linkedin"></i>
-                <h2>Prospector <span>V3.2</span></h2>
+    <header>
+        <div class="header-container">
+            <h1>🚀 LinkedIn Prospector V3.2</h1>
+            <p class="subtitle">Outil de Prospection Professionnelle & Supervision en Temps Réel</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Configuration & Lancement -->
+        <section class="card config-section">
+            <h2>⚙️ Paramètres de Prospection</h2>
+            <div class="config-grid">
+                <div class="form-group">
+                    <label for="companies">Entreprises cibles (une par ligne)</label>
+                    <textarea id="companies" rows="4" placeholder="Thales&#10;Airbus&#10;Safran&#10;Capgemini"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="keywords">Postes / Mots-clés (un par ligne)</label>
+                    <textarea id="keywords" rows="4" placeholder="Responsable RH&#10;Recruteur&#10;Talent Acquisition&#10;Directeur Technique"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="location">Localisation</label>
+                    <input type="text" id="location" value="France" placeholder="France, Paris, etc.">
+                </div>
+                <div class="form-group">
+                    <label for="email_level">Niveau de patterns Email</label>
+                    <select id="email_level">
+                        <option value="light">Light (4 patterns classiques)</option>
+                        <option value="medium" selected>Medium (11 patterns recommandés)</option>
+                        <option value="heavy">Heavy (22 patterns exhaustifs)</option>
+                    </select>
+                </div>
             </div>
-            
-            <nav class="nav-menu">
-                <a href="#" class="active" data-view="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a>
-                <a href="#" data-view="prospects"><i class="fas fa-users"></i> Prospects</a>
-                <a href="#" data-view="settings"><i class="fas fa-cog"></i> Settings</a>
-            </nav>
 
-            <div class="controls-panel">
-                <h3>Live Controls</h3>
-                <div class="control-buttons">
-                    <button id="btn-start" class="btn btn-primary"><i class="fas fa-play"></i> Start</button>
-                    <button id="btn-pause" class="btn btn-warning"><i class="fas fa-pause"></i> Pause</button>
-                    <button id="btn-stop" class="btn btn-danger"><i class="fas fa-stop"></i> Stop</button>
-                </div>
-                <div class="action-buttons">
-                    <button id="btn-dl-config" class="btn btn-secondary"><i class="fas fa-download"></i> Config</button>
-                    <button id="btn-open-folder" class="btn btn-secondary"><i class="fas fa-folder-open"></i> Output</button>
+            <div class="actions-bar">
+                <button id="btn-generate-config" class="btn primary">📥 Télécharger config.json</button>
+                <button id="btn-open-file" class="btn secondary">📂 Charger results.json</button>
+                <input type="file" id="file-input" accept=".json" style="display: none;">
+            </div>
+        </section>
+
+        <!-- Résumé KPIs Simple -->
+        <section id="kpi-section" class="kpi-grid">
+            <div class="kpi-card">
+                <span class="kpi-title">Total Profils</span>
+                <span id="kpi-total" class="kpi-val">0</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-title">Validés MX / SMTP</span>
+                <span id="kpi-valid" class="kpi-val text-success">0</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-title">À vérifier / Catch-All</span>
+                <span id="kpi-verify" class="kpi-val text-warning">0</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-title">Score Moyen</span>
+                <span id="kpi-score" class="kpi-val text-primary">0%</span>
+            </div>
+        </section>
+
+        <!-- Tableau de Supervision en Temps Réel -->
+        <section class="card supervision-section">
+            <div class="section-header">
+                <h2>📋 Tableau de Supervision des Prospects</h2>
+                <div class="table-controls">
+                    <input type="text" id="search-input" placeholder="🔍 Filtrer par nom, poste, entreprise..." class="search-field">
+                    <button id="btn-export-excel" class="btn success">📊 Exporter Excel (Sans doublon)</button>
+                    <button id="btn-copy-emails" class="btn secondary">📋 Copier les emails valides</button>
                 </div>
             </div>
-        </aside>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Header -->
-            <header class="topbar">
-                <div class="status-indicator">
-                    <span class="dot offline" id="status-dot"></span>
-                    <span id="status-text">Ready</span>
-                </div>
-                
-                <div class="export-actions">
-                    <button class="btn btn-icon" id="btn-export-excel" title="Export Excel"><i class="fas fa-file-excel"></i></button>
-                    <button class="btn btn-icon" id="btn-export-csv" title="Export CSV"><i class="fas fa-file-csv"></i></button>
-                    <button class="btn btn-icon" id="btn-export-json" title="Export JSON"><i class="fas fa-file-code"></i></button>
-                    <button class="btn btn-icon" id="btn-copy-valid" title="Copy Valid Emails"><i class="fas fa-copy"></i></button>
-                </div>
-            </header>
+            <div class="table-responsive">
+                <table id="supervision-table">
+                    <thead>
+                        <tr>
+                            <th data-sort="first_name">Prénom ↕</th>
+                            <th data-sort="last_name">Nom ↕</th>
+                            <th data-sort="title">Poste ↕</th>
+                            <th data-sort="company">Entreprise ↕</th>
+                            <th data-sort="email">Email Proposé ↕</th>
+                            <th data-sort="confidence_score">Score ↕</th>
+                            <th data-sort="status">Statut ↕</th>
+                            <th>Vérification LinkedIn</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <tr class="empty-row">
+                            <td colspan="8">Aucun prospect chargé. Téléchargez votre configuration ou chargez un fichier de résultats.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-            <!-- Dashboard View -->
-            <section id="view-dashboard" class="view-section active">
-                <div class="kpi-grid">
-                    <div class="kpi-card">
-                        <div class="kpi-icon"><i class="fas fa-users"></i></div>
-                        <div class="kpi-data">
-                            <h4>Total Prospects</h4>
-                            <span class="kpi-value" id="kpi-total">0</span>
-                        </div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-icon"><i class="fas fa-star"></i></div>
-                        <div class="kpi-data">
-                            <h4>Average Score</h4>
-                            <span class="kpi-value" id="kpi-score">0%</span>
-                        </div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-icon"><i class="fas fa-check-circle"></i></div>
-                        <div class="kpi-data">
-                            <h4>Valid MX %</h4>
-                            <span class="kpi-value" id="kpi-mx">0%</span>
-                        </div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-icon"><i class="fas fa-building"></i></div>
-                        <div class="kpi-data">
-                            <h4>Companies Processed</h4>
-                            <span class="kpi-value" id="kpi-companies">0</span>
-                        </div>
-                    </div>
-                </div>
+            <div class="pagination-bar">
+                <button id="btn-prev" class="btn small" disabled>← Précédent</button>
+                <span id="page-info">Page 1 / 1</span>
+                <button id="btn-next" class="btn small" disabled>Suivant →</button>
+            </div>
+        </section>
+    </main>
 
-                <div class="charts-container">
-                    <div class="chart-card">
-                        <h3>Scraping Progress</h3>
-                        <div class="css-chart-container">
-                            <div class="css-bar-chart" id="chart-progress">
-                                <div class="bar" style="height: 0%;" data-label="0%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+    <footer>
+        <p>LinkedIn Prospector V3.2 | Compatible Microsoft Edge & GitHub Pages</p>
+    </footer>
 
-            <!-- Prospects View -->
-            <section id="view-prospects" class="view-section">
-                <div class="filters-panel">
-                    <div class="filter-group search-bar">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="search-input" placeholder="Search name or title...">
-                    </div>
-                    
-                    <div class="filter-group">
-                        <select id="filter-company">
-                            <option value="">All Companies</option>
-                        </select>
-                    </div>
+    <div id="toast-container"></div>
 
-                    <div class="filter-group">
-                        <select id="filter-mx">
-                            <option value="">Any MX Status</option>
-                            <option value="valid">Valid Only</option>
-                            <option value="invalid">Invalid Only</option>
-                        </select>
-                    </div>
-
-                    <div class="filter-group slider-group">
-                        <label>Min Score: <span id="score-val">0</span>%</label>
-                        <input type="range" id="filter-score" min="0" max="100" value="0">
-                    </div>
-                </div>
-
-                <div class="table-container">
-                    <table id="prospects-table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Title</th>
-                                <th>Company</th>
-                                <th>Email</th>
-                                <th>Score</th>
-                                <th>MX Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="prospects-body">
-                            <!-- Data will be populated here -->
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Settings View -->
-            <section id="view-settings" class="view-section">
-                <div class="settings-panel">
-                    <h2>Application Settings</h2>
-                    <form id="settings-form">
-                        <div class="form-group">
-                            <label>API Key</label>
-                            <input type="password" id="setting-api-key" placeholder="Enter API Key">
-                        </div>
-                        <div class="form-group">
-                            <label>Max Delay (seconds)</label>
-                            <input type="number" id="setting-delay" value="5" min="1">
-                        </div>
-                        <div class="form-group">
-                            <label>Theme</label>
-                            <select id="setting-theme">
-                                <option value="dark">Dark Mode</option>
-                                <option value="light">Light Mode</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Save Settings</button>
-                    </form>
-                </div>
-            </section>
-        </main>
-    </div>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

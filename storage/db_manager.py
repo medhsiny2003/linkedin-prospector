@@ -7,7 +7,7 @@ from datetime import datetime
 logger = logging.getLogger(__name__)
 
 class DatabaseManager:
-    """SQLite database manager in WAL mode for LinkedIn Prospector contacts."""
+    """SQLite database manager in WAL mode with strict contact deduplication."""
 
     def __init__(self, db_path: str = 'data/prospector.db'):
         self.db_path = db_path
@@ -19,11 +19,11 @@ class DatabaseManager:
         os.makedirs(os.path.dirname(self.db_path) or 'data', exist_ok=True)
         self.conn = sqlite3.connect(self.db_path)
         self.conn.row_factory = sqlite3.Row
-        
+
         cursor = self.conn.cursor()
         cursor.execute("PRAGMA journal_mode=WAL;")
-        
-        # Contacts table
+
+        # Contacts table with strict unique constraint on (first_name, last_name, company)
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS contacts (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -40,72 +40,105 @@ class DatabaseManager:
                 linkedin_url TEXT DEFAULT '',
                 extraction_date DATETIME DEFAULT CURRENT_TIMESTAMP,
                 source TEXT DEFAULT 'xray',
-                UNIQUE(first_name, last_name, company, linkedin_url)
+                UNIQUE(first_name, last_name, company)
             );
         """)
-        
+
         # Indexes for fast querying & analytics
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_contacts_company ON contacts(company);")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_contacts_status ON contacts(mx_status);")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_contacts_score ON contacts(confidence_score);")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_contacts_date ON contacts(extraction_date);")
-        
+
         self.conn.commit()
 
     def insert_contact(self, contact: Any) -> Optional[int]:
-        """Inserts or updates a contact record."""
+        """Inserts or updates a contact record, keeping highest confidence score and storing alternative."""
         try:
             cursor = self.conn.cursor()
-            
-            # Handle both Contact dataclass and dict
-            if isinstance(contact, dict):
-                first_name = contact.get('first_name', '')
-                last_name = contact.get('last_name', '')
-                title = contact.get('title', '')
-                company = contact.get('company', '')
-                email = contact.get('email', '')
-                email_alt1 = contact.get('email_alt1', '')
-                email_alt2 = contact.get('email_alt2', '')
-                score = contact.get('confidence_score', 0)
-                mx_status = contact.get('mx_status', 'unknown')
-                mx_active = contact.get('mx_active', '')
-                linkedin_url = contact.get('linkedin_url', '')
-                extraction_date = contact.get('extraction_date', datetime.now().isoformat())
-                source = contact.get('source', 'xray')
-            else:
-                first_name = getattr(contact, 'first_name', '')
-                last_name = getattr(contact, 'last_name', '')
-                title = getattr(contact, 'title', '')
-                company = getattr(contact, 'company', '')
-                email = getattr(contact, 'email', '')
-                email_alt1 = getattr(contact, 'email_alt1', '')
-                email_alt2 = getattr(contact, 'email_alt2', '')
-                score = getattr(contact, 'confidence_score', 0)
-                mx_status = getattr(contact, 'mx_status', 'unknown')
-                mx_active = getattr(contact, 'mx_active', '')
-                linkedin_url = getattr(contact, 'linkedin_url', '')
-                extraction_date = getattr(contact, 'extraction_date', datetime.now().isoformat())
-                source = getattr(contact, 'source', 'xray')
 
+            if isinstance(contact, dict):
+                first_name = str(contact.get('first_name', '')).strip()
+                last_name = str(contact.get('last_name', '')).strip()
+                title = str(contact.get('title', '')).strip()
+                company = str(contact.get('company', '')).strip()
+                email = str(contact.get('email', '')).strip()
+                email_alt1 = str(contact.get('email_alt1', '')).strip()
+                email_alt2 = str(contact.get('email_alt2', '')).strip()
+                score = int(contact.get('confidence_score') or 0)
+                mx_status = str(contact.get('mx_status', 'unknown')).strip()
+                mx_active = str(contact.get('mx_active', '')).strip()
+                linkedin_url = str(contact.get('linkedin_url', '')).strip()
+                extraction_date = contact.get('extraction_date', datetime.now().isoformat())
+                source = str(contact.get('source', 'xray')).strip()
+            else:
+                first_name = str(getattr(contact, 'first_name', '')).strip()
+                last_name = str(getattr(contact, 'last_name', '')).strip()
+                title = str(getattr(contact, 'title', '')).strip()
+                company = str(getattr(contact, 'company', '')).strip()
+                email = str(getattr(contact, 'email', '')).strip()
+                email_alt1 = str(getattr(contact, 'email_alt1', '')).strip()
+                email_alt2 = str(getattr(contact, 'email_alt2', '')).strip()
+                score = int(getattr(contact, 'confidence_score', 0) or 0)
+                mx_status = str(getattr(contact, 'mx_status', 'unknown')).strip()
+                mx_active = str(getattr(contact, 'mx_active', '')).strip()
+                linkedin_url = str(getattr(contact, 'linkedin_url', '')).strip()
+                extraction_date = getattr(contact, 'extraction_date', datetime.now().isoformat())
+                source = str(getattr(contact, 'source', 'xray')).strip()
+
+            if not first_name or not last_name:
+                return None
+
+            # Check if contact exists
+            cursor.execute("SELECT id, email, confidence_score FROM contacts WHERE first_name = ? AND last_name = ? AND company = ?", (first_name, last_name, company))
+            existing = cursor.fetchone()
+
+            if existing:
+                existing_id, existing_email, existing_score = existing['id'], existing['email'], existing['confidence_score']
+                if score >= existing_score:
+                    # Update to better email, demote previous to alt
+                    alt_to_save = existing_email if existing_email != email else email_alt1
+                    cursor.execute("""
+                        UPDATE contacts SET
+                            title = COALESCE(NULLIF(?, ''), title),
+                            email = ?,
+                            email_alt1 = ?,
+                            email_alt2 = ?,
+                            confidence_score = ?,
+                            mx_status = ?,
+                            mx_active = ?,
+                            linkedin_url = COALESCE(NULLIF(?, ''), linkedin_url),
+                            extraction_date = ?,
+                            source = ?
+                        WHERE id = ?
+                    """, (title, email, alt_to_save, email_alt2, score, mx_status, mx_active, linkedin_url, extraction_date, source, existing_id))
+                else:
+                    # Keep existing primary, record new as alt
+                    if email and email != existing_email:
+                        cursor.execute("UPDATE contacts SET email_alt1 = ? WHERE id = ?", (email, existing_id))
+                self.conn.commit()
+                return existing_id
+
+            # Insert new unique record
             cursor.execute("""
-                INSERT OR REPLACE INTO contacts (
+                INSERT INTO contacts (
                     first_name, last_name, title, company, email, email_alt1, email_alt2,
                     confidence_score, mx_status, mx_active, linkedin_url, extraction_date, source
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 first_name, last_name, title, company,
                 email, email_alt1, email_alt2, score,
-                mx_status, str(mx_active), linkedin_url,
+                mx_status, mx_active, linkedin_url,
                 extraction_date, source
             ))
             self.conn.commit()
             return cursor.lastrowid
         except Exception as e:
-            logger.error(f"Error inserting contact: {e}")
+            logger.error(f"Error inserting/updating contact: {e}")
             return None
 
     def get_all_contacts(self) -> List[Dict[str, Any]]:
-        """Retrieves all contacts sorted by company and last name."""
+        """Retrieves deduplicated contacts sorted by company and last name."""
         cursor = self.conn.cursor()
         cursor.execute("SELECT * FROM contacts ORDER BY company, last_name")
         return [dict(row) for row in cursor.fetchall()]
@@ -117,27 +150,27 @@ class DatabaseManager:
         return [dict(row) for row in cursor.fetchall()]
 
     def get_stats(self) -> Dict[str, Any]:
-        """Calculates KPI statistics over stored contacts."""
+        """Calculates KPI statistics over stored unique contacts."""
         cursor = self.conn.cursor()
         stats = {}
-        
+
         cursor.execute("SELECT COUNT(*) FROM contacts")
         stats['total_contacts'] = cursor.fetchone()[0]
-        
+
         cursor.execute("SELECT company, COUNT(*) FROM contacts GROUP BY company")
         stats['by_company'] = {row[0]: row[1] for row in cursor.fetchall()}
-        
+
         cursor.execute("SELECT mx_status, COUNT(*) FROM contacts GROUP BY mx_status")
         stats['by_mx_status'] = {row[0]: row[1] for row in cursor.fetchall()}
-        
+
         cursor.execute("SELECT AVG(confidence_score) FROM contacts WHERE confidence_score > 0")
         avg = cursor.fetchone()[0]
         stats['avg_confidence'] = float(avg) if avg else 0.0
-        
+
         return stats
 
     def search_contacts(self, query: str) -> List[Dict[str, Any]]:
-        """Performs full-text search across contacts."""
+        """Performs search across contacts."""
         cursor = self.conn.cursor()
         search_term = f"%{query}%"
         cursor.execute("""
@@ -148,7 +181,7 @@ class DatabaseManager:
         return [dict(row) for row in cursor.fetchall()]
 
     def export_to_dicts(self) -> List[Dict[str, Any]]:
-        """Exports all records as list of dictionaries."""
+        """Exports all unique records as list of dictionaries."""
         return self.get_all_contacts()
 
     def close(self) -> None:
