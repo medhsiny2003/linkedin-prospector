@@ -32,7 +32,7 @@ class StealthBrowser:
         proxy_url: Optional[str] = None,
         rate_limiter: Any = None,
         user_data_dir: str = "data/sessions/edge_profile",
-        headless: bool = True
+        headless: bool = False
     ):
         self.cookie = cookie
         self.proxy_url = proxy_url
@@ -58,53 +58,59 @@ class StealthBrowser:
 
             launch_args = [
                 '--disable-blink-features=AutomationControlled',
-                '--disable-features=IsolateOrigins,site-per-process',
-                '--no-sandbox',
-                '--disable-dev-shm-usage',
                 '--disable-infobars',
-                '--disable-background-networking',
-                '--disable-default-apps',
-                '--no-first-run'
+                '--no-default-browser-check',
+                '--no-first-run',
+                '--start-maximized',
+                '--lang=fr-FR'
             ]
 
             proxy_dict = {'server': self.proxy_url} if self.proxy_url else None
 
-            # Launch persistent context using Microsoft Edge channel
+            # Launch persistent context using Microsoft Edge channel with native full-screen resolution
             try:
                 self.context = await self.playwright.chromium.launch_persistent_context(
                     user_data_dir=self.user_data_dir,
                     channel="msedge",
                     headless=self.headless,
                     args=launch_args,
+                    ignore_default_args=["--enable-automation"],
                     proxy=proxy_dict,
-                    viewport={'width': 1440, 'height': 900},
-                    user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.2478.80",
+                    no_viewport=True,
                     locale='fr-FR',
                     timezone_id='Europe/Paris'
                 )
                 logger.info("Navigateur Microsoft Edge initialisé avec profil persistant data/sessions/edge_profile")
             except Exception as edge_err:
-                logger.warning(f"Edge channel indisponible ({edge_err}), fallback sur Chromium standard.")
+                logger.warning(f"Edge channel direct indisponible ({edge_err}), tentative de lancement standard.")
                 self.context = await self.playwright.chromium.launch_persistent_context(
                     user_data_dir=self.user_data_dir,
                     headless=self.headless,
                     args=launch_args,
+                    ignore_default_args=["--enable-automation"],
                     proxy=proxy_dict,
-                    viewport={'width': 1440, 'height': 900},
-                    user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.2478.80",
+                    no_viewport=True,
                     locale='fr-FR',
                     timezone_id='Europe/Paris'
                 )
 
-            # Patch navigator.webdriver on all newly created pages
+            # Patch navigator.webdriver and runtime on all newly created pages
             await self.context.add_init_script("""
-                Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
-                window.chrome = { runtime: {} };
+                try {
+                    Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
+                    delete Object.getPrototypeOf(navigator).webdriver;
+                } catch(e) {}
+                if (!window.chrome) window.chrome = {};
+                if (!window.chrome.runtime) window.chrome.runtime = {};
             """)
 
             # Add li_at session cookie if provided
             if self.cookie:
-                clean_cookie = self.cookie.strip()
+                clean_cookie = self.cookie.strip().strip('"').strip("'")
+                match = re.search(r'li_at="?([a-zA-Z0-9_\-\.]+)"?', clean_cookie)
+                if match:
+                    clean_cookie = match.group(1).strip()
+
                 await self.context.add_cookies([
                     {
                         'name': 'li_at',
@@ -112,10 +118,29 @@ class StealthBrowser:
                         'domain': '.linkedin.com',
                         'path': '/',
                         'secure': True,
-                        'httpOnly': True
+                        'httpOnly': True,
+                        'sameSite': 'Lax'
+                    },
+                    {
+                        'name': 'li_at',
+                        'value': clean_cookie,
+                        'domain': '.www.linkedin.com',
+                        'path': '/',
+                        'secure': True,
+                        'httpOnly': True,
+                        'sameSite': 'Lax'
+                    },
+                    {
+                        'name': 'JSESSIONID',
+                        'value': '"ajax:0"',
+                        'domain': '.www.linkedin.com',
+                        'path': '/',
+                        'secure': True,
+                        'httpOnly': False,
+                        'sameSite': 'Lax'
                     }
                 ])
-                logger.info("Cookie li_at pour Microsoft Edge configuré sur .linkedin.com")
+                logger.info("Cookies de session LinkedIn configurés sur Microsoft Edge.")
 
         except Exception as e:
             logger.error(f"Erreur initialisation StealthBrowser Edge: {e}")
@@ -144,8 +169,9 @@ class StealthBrowser:
                     if "feed" in page.url:
                         self._session_verified = True
                         logger.info("Session Edge LinkedIn validée avec succès !")
-                    elif "checkpoint" in page.url or "authwall" in page.url or "login" in page.url:
-                        logger.warning("Session LinkedIn : Cookie expiré ou vérification requise.")
+                    elif await self._handle_captcha_challenge(page):
+                        self._session_verified = True
+                        logger.info("Défi de sécurité validé avec succès !")
                 except Exception:
                     pass
 
@@ -159,10 +185,12 @@ class StealthBrowser:
             await page.goto(url, wait_until="domcontentloaded", timeout=20000)
             await asyncio.sleep(3)
 
-            # Check for captchas or errors
+            # Check and handle captchas or checkpoint challenges
             if await self._detect_captcha(page):
-                logger.warning("CAPTCHA ou Challenge détecté sur LinkedIn.")
-                return contacts
+                solved = await self._handle_captcha_challenge(page)
+                if not solved:
+                    logger.warning("CAPTCHA ou Défi non résolu, interruption pour cette entreprise.")
+                    return contacts
 
             # 3. Human behavior simulation & progressive scroll
             await self._simulate_human_behavior(page)
@@ -224,13 +252,34 @@ class StealthBrowser:
         """Checks for captcha or authwall."""
         try:
             url = page.url.lower()
-            if "checkpoint/challenge" in url or "chrome-error://" in url:
+            if any(sig in url for sig in ["checkpoint", "challenge", "security-verification", "captcha"]):
                 return True
-            content = await page.content()
-            if "captcha" in content.lower() or "security check" in content.lower():
+            content = (await page.content()).lower()
+            if "captcha" in content or "security check" in content or "vérification de sécurité" in content:
                 return True
         except Exception:
             pass
+        return False
+
+    async def _handle_captcha_challenge(self, page: Page, timeout_seconds: int = 120) -> bool:
+        """Guides user and waits for manual resolution of CAPTCHA in headful Edge window."""
+        logger.warning("=" * 60)
+        logger.warning("⚠️  DÉFI DE SÉCURITÉ / CAPTCHA DÉTECTÉ SUR LINKEDIN")
+        logger.warning("Veuillez résoudre le CAPTCHA dans la fenêtre Microsoft Edge ouverte...")
+        logger.warning("=" * 60)
+
+        for _ in range(int(timeout_seconds / 2)):
+            await asyncio.sleep(2)
+            try:
+                url = page.url.lower()
+                if not any(sig in url for sig in ["checkpoint", "challenge", "security-verification", "captcha", "login"]):
+                    # Résolution réussie
+                    logger.info("✅ Défi de sécurité résolu avec succès ! Reprise de l'automatisation...")
+                    return True
+            except Exception:
+                pass
+
+        logger.error("❌ Délai de résolution du défi de sécurité dépassé.")
         return False
 
     async def close(self) -> None:
