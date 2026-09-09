@@ -10,6 +10,15 @@ import asyncio
 import webbrowser
 import logging
 from datetime import datetime
+
+# Windows console encoding fix
+if hasattr(sys.stdout, 'reconfigure'):
+    try:
+        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+        sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+    except Exception:
+        pass
+
 from aiohttp import web
 
 # Adjust path to import core modules
