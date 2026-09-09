@@ -1,17 +1,15 @@
-"""Local Web Server & GUI Backend for LinkedIn Prospector V3.2.
-
-Provides REST API and serves the frontend on http://localhost:5000.
-"""
+"""Local Web Server & GUI Backend for LinkedIn Prospector V3.2."""
 
 import os
 import sys
 import json
+import socket
 import asyncio
 import webbrowser
 import logging
 from datetime import datetime
 
-# Windows console encoding fix
+# Configure safe UTF-8 output on Windows
 if hasattr(sys.stdout, 'reconfigure'):
     try:
         sys.stdout.reconfigure(encoding='utf-8', errors='replace')
@@ -48,7 +46,7 @@ class WebLogHandler(logging.Handler):
                 "message": msg
             }
             app_state["logs"].append(entry)
-            if len(app_state["logs"]) > 200:
+            if len(app_state["logs"]) > 300:
                 app_state["logs"].pop(0)
         except Exception:
             pass
@@ -67,7 +65,7 @@ async def run_pipeline_task(config: ProspectorConfig):
         app_state["logs"].append({
             "timestamp": datetime.now().strftime("%H:%M:%S"),
             "level": "INFO",
-            "message": "🚀 Démarrage de la prospection..."
+            "message": "Demarrage de la prospection..."
         })
         
         orchestrator = Orchestrator(config)
@@ -78,21 +76,21 @@ async def run_pipeline_task(config: ProspectorConfig):
         app_state["logs"].append({
             "timestamp": datetime.now().strftime("%H:%M:%S"),
             "level": "SUCCESS",
-            "message": f"✅ Prospection terminée ! {stats.get('total_contacts_extracted', 0)} contacts extraits."
+            "message": f"Prospection terminee avec succes ! {stats.get('total_contacts_extracted', 0)} contacts extraits."
         })
     except asyncio.CancelledError:
         app_state["status"] = "idle"
         app_state["logs"].append({
             "timestamp": datetime.now().strftime("%H:%M:%S"),
             "level": "WARNING",
-            "message": "⚠️ Prospection arrêtée par l'utilisateur."
+            "message": "Prospection arretee par l'utilisateur."
         })
     except Exception as e:
         app_state["status"] = "error"
         app_state["logs"].append({
             "timestamp": datetime.now().strftime("%H:%M:%S"),
             "level": "ERROR",
-            "message": f"❌ Erreur: {str(e)}"
+            "message": f"Erreur: {str(e)}"
         })
 
 
@@ -112,7 +110,7 @@ async def handle_start(request):
     """Start prospection with given config."""
     global app_state
     if app_state["status"] == "running":
-        return web.json_response({"error": "Une prospection est déjà en cours"}, status=400)
+        return web.json_response({"error": "Une prospection est deja en cours"}, status=400)
     
     try:
         data = await request.json()
@@ -134,7 +132,7 @@ async def handle_start(request):
 
         app_state["logs"] = []
         app_state["current_task"] = asyncio.create_task(run_pipeline_task(config))
-        return web.json_response({"status": "started", "message": "Prospection lancée avec succès"})
+        return web.json_response({"status": "started", "message": "Prospection lancee avec succes"})
     except Exception as e:
         return web.json_response({"error": str(e)}, status=500)
 
@@ -145,8 +143,8 @@ async def handle_stop(request):
     if app_state["current_task"] and not app_state["current_task"].done():
         app_state["current_task"].cancel()
         app_state["status"] = "idle"
-        return web.json_response({"status": "stopped", "message": "Prospection arrêtée"})
-    return web.json_response({"status": "not_running", "message": "Aucune tâche en cours"})
+        return web.json_response({"status": "stopped", "message": "Prospection arretee"})
+    return web.json_response({"status": "not_running", "message": "Aucune tache en cours"})
 
 
 async def handle_results(request):
@@ -167,10 +165,31 @@ async def handle_open_folder(request):
     return web.json_response({"status": "opened"})
 
 
+def is_port_available(port: int) -> bool:
+    """Check if a TCP port is free on localhost."""
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        try:
+            s.bind(('127.0.0.1', port))
+            return True
+        except OSError:
+            return False
+
+
+def find_free_port(preferred_ports=(5000, 5001, 8000, 8080, 8888)) -> int:
+    """Find the first available port from the preferred list."""
+    for p in preferred_ports:
+        if is_port_available(p):
+            return p
+    # Fallback to dynamic port
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind(('127.0.0.1', 0))
+        return s.getsockname()[1]
+
+
 def create_app():
     app = web.Application()
     
-    # API
+    # API Endpoints
     app.router.add_get('/api/status', handle_status)
     app.router.add_post('/api/start', handle_start)
     app.router.add_post('/api/stop', handle_stop)
@@ -184,31 +203,51 @@ def create_app():
     return app
 
 
-async def main():
+async def start_server():
+    port = find_free_port()
     app = create_app()
     runner = web.AppRunner(app)
     await runner.setup()
     
-    port = 5000
-    site = web.TCPSite(runner, 'localhost', port)
+    site = web.TCPSite(runner, '127.0.0.1', port)
     await site.start()
     
     url = f"http://localhost:{port}/index.html"
-    print("\n" + "=" * 60)
-    print(f"  🚀 LinkedIn Prospector V3.2 - Serveur Web démarré !")
-    print(f"  👉 Interface accessible sur : {url}")
-    print("=" * 60 + "\n")
+    print("")
+    print("=" * 65)
+    print("      LinkedIn Prospector V3.2 - Application Active")
+    print("=" * 65)
+    print(f"  Interface Web : {url}")
+    print("  (Laissez cette fenetre ouverte tant que vous utilisez l'outil)")
+    print("=" * 65)
+    print("")
     
-    # Ouvrir automatiquement dans le navigateur par défaut
-    webbrowser.open(url)
-    
-    # Keep server running
-    while True:
-        await asyncio.sleep(3600)
+    # Open browser automatically
+    try:
+        webbrowser.open(url)
+    except Exception:
+        pass
+
+    # Wait indefinitely
+    stop_event = asyncio.Event()
+    try:
+        await stop_event.wait()
+    except (asyncio.CancelledError, KeyboardInterrupt):
+        pass
+    finally:
+        await runner.cleanup()
+
+
+def main():
+    try:
+        asyncio.run(start_server())
+    except KeyboardInterrupt:
+        print("\n[INFO] Serveur arrete par l'utilisateur.")
+    except Exception as e:
+        print(f"\n[ERREUR] Erreur inattendue : {e}")
+        import traceback
+        traceback.print_exc()
 
 
 if __name__ == '__main__':
-    try:
-        asyncio.run(main())
-    except KeyboardInterrupt:
-        print("\n[INFO] Serveur arrêté.")
+    main()
