@@ -1,0 +1,242 @@
+/* ==============================================================================
+   LinkedIn Prospector V3.1 - Design System Pro
+   Palette : Dégradé LinkedIn (#0A66C2 -> #004182), Vert (#057642), Ambre (#D97706)
+   ============================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+html, body, [class*="css"] {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #1E293B;
+}
+
+/* En-tête avec dégradé LinkedIn */
+.pro-header {
+    background: linear-gradient(135deg, #0A66C2 0%, #004182 100%);
+    border-radius: 16px;
+    padding: 24px 32px;
+    color: #FFFFFF !important;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 24px rgba(10, 102, 194, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.pro-header::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.pro-header h1 {
+    color: #FFFFFF !important;
+    font-weight: 800 !important;
+    font-size: 1.9rem !important;
+    margin: 0 0 6px 0 !important;
+    letter-spacing: -0.5px;
+}
+
+.pro-header p {
+    color: #E2E8F0 !important;
+    font-size: 0.95rem;
+    margin: 0 !important;
+    font-weight: 400;
+}
+
+/* Cartes Métriques KPIs */
+.kpi-card {
+    background: #FFFFFF;
+    border-radius: 14px;
+    padding: 20px;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+}
+
+.kpi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(10, 102, 194, 0.1);
+    border-color: #93C5FD;
+}
+
+.kpi-card.kpi-blue { border-top: 4px solid #0A66C2; }
+.kpi-card.kpi-purple { border-top: 4px solid #8B5CF6; }
+.kpi-card.kpi-green { border-top: 4px solid #10B981; }
+.kpi-card.kpi-amber { border-top: 4px solid #F59E0B; }
+
+.kpi-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.kpi-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #64748B;
+}
+
+.kpi-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+.kpi-icon.blue { background: #EFF6FF; color: #0A66C2; }
+.kpi-icon.purple { background: #F5F3FF; color: #8B5CF6; }
+.kpi-icon.green { background: #ECFDF5; color: #10B981; }
+.kpi-icon.amber { background: #FFFBEB; color: #F59E0B; }
+
+.kpi-value {
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: #0F172A;
+    line-height: 1.1;
+    margin-bottom: 6px;
+}
+
+.kpi-subtitle {
+    font-size: 0.8rem;
+    color: #64748B;
+    font-weight: 500;
+}
+
+/* Séparateur Visuel */
+.pro-divider {
+    height: 1px;
+    background: linear-gradient(90deg, rgba(10, 102, 194, 0.2) 0%, rgba(226, 232, 240, 0.8) 50%, rgba(10, 102, 194, 0) 100%);
+    margin: 24px 0;
+}
+
+/* Badges de Statut */
+.badge-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+.badge-valide {
+    background-color: #ECFDF5;
+    color: #047857;
+    border: 1px solid #A7F3D0;
+}
+
+.badge-a-verifier {
+    background-color: #FFFBEB;
+    color: #B45309;
+    border: 1px solid #FDE68A;
+}
+
+.badge-invalide {
+    background-color: #FEF2F2;
+    color: #B91C1C;
+    border: 1px solid #FECACA;
+}
+
+.badge-tier {
+    background: #EFF6FF;
+    color: #1D4ED8;
+    border: 1px solid #BFDBFE;
+    font-weight: 600;
+}
+
+/* Sidebar Stylisée */
+section[data-testid="stSidebar"] {
+    background-color: #F8FAFC !important;
+    border-right: 1px solid #E2E8F0 !important;
+}
+
+section[data-testid="stSidebar"] .stButton > button {
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease !important;
+}
+
+/* Boutons d'Action Principaux */
+.stButton > button[kind="primary"] {
+    background: linear-gradient(135deg, #0A66C2 0%, #004182 100%) !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+    padding: 10px 20px !important;
+    box-shadow: 0 4px 12px rgba(10, 102, 194, 0.25) !important;
+    transition: all 0.2s ease !important;
+}
+
+.stButton > button[kind="primary"]:hover {
+    box-shadow: 0 6px 18px rgba(10, 102, 194, 0.4) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Carte Container */
+.pro-card {
+    background: #FFFFFF;
+    border-radius: 14px;
+    padding: 24px;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.02);
+    margin-bottom: 20px;
+}
+
+.pro-card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0F172A;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Liste des Contacts Récents */
+.contact-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid #F1F5F9;
+    margin-bottom: 8px;
+    background: #FAFAFA;
+    transition: all 0.2s ease;
+}
+
+.contact-item:hover {
+    background: #F0F7FF;
+    border-color: #BAE6FD;
+}
+
+.contact-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0A66C2 0%, #004182 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+}

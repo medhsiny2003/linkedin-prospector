@@ -23,15 +23,14 @@ except ImportError:
 
 STEALTH_EVASION_SCRIPT = """
 (() => {
-    // 1. Masquage propre de navigator.webdriver
+    // 1. Masquage de navigator.webdriver
     try {
         Object.defineProperty(navigator, 'webdriver', {
             get: () => undefined
         });
-        delete Object.getPrototypeOf(navigator).webdriver;
     } catch(e) {}
 
-    // 2. Émulation des objets chrome runtime natifs
+    // 2. Émulation des objets runtime natifs
     if (!window.chrome) {
         window.chrome = {};
     }
@@ -43,13 +42,6 @@ STEALTH_EVASION_SCRIPT = """
     try {
         Object.defineProperty(navigator, 'languages', {
             get: () => ['fr-FR', 'fr', 'en-US', 'en']
-        });
-    } catch(e) {}
-
-    // 4. Masquage des plugins
-    try {
-        Object.defineProperty(navigator, 'plugins', {
-            get: () => [1, 2, 3, 4, 5]
         });
     } catch(e) {}
 })();
@@ -83,7 +75,7 @@ class StealthBrowser:
         session_dir = session_manager.ensure_session_directory()
         self.playwright = await async_playwright().start()
 
-        # Configuration des options anti-détection pour Microsoft Edge natif
+        # Configuration des options du navigateur (Anti-délégation & Session isolée)
         launch_args = [
             "--disable-blink-features=AutomationControlled",
             "--disable-infobars",
@@ -91,13 +83,17 @@ class StealthBrowser:
             "--no-default-browser-check",
             "--no-first-run",
             "--start-maximized",
-            "--lang=fr-FR"
+            "--lang=fr-FR",
+            "--no-sandbox",
+            "--disable-setuid-sandbox",
+            "--disable-dev-shm-usage"
         ]
 
         proxy_dict = None
-        if config.PROXY_URL:
-            proxy_dict = {"server": config.PROXY_URL}
-            audit_logger.log_event("PROXY_CONFIG", f"Utilisation du proxy : {config.PROXY_URL}")
+        from core.network.proxy_manager import proxy_manager
+        proxy_dict = proxy_manager.get_playwright_proxy_dict()
+        if proxy_dict:
+            audit_logger.log_event("PROXY_CONFIG", f"Utilisation du proxy : {proxy_dict.get('server')}")
 
         edge_exe = self.find_edge_executable()
 
@@ -107,7 +103,7 @@ class StealthBrowser:
                 f"Lancement direct de Microsoft Edge : {edge_exe}",
                 {"session_dir": str(session_dir)}
             )
-            # Lancement direct de msedge.exe avec no_viewport=True pour résolution plein écran native
+            # Lancement direct de msedge.exe
             self.context = await self.playwright.chromium.launch_persistent_context(
                 user_data_dir=str(session_dir),
                 executable_path=edge_exe,
@@ -115,14 +111,14 @@ class StealthBrowser:
                 args=launch_args,
                 ignore_default_args=["--enable-automation"],
                 proxy=proxy_dict,
-                no_viewport=True,
+                viewport={"width": config.VIEWPORT_WIDTH, "height": config.VIEWPORT_HEIGHT},
                 locale=config.LOCALE,
                 timezone_id=config.TIMEZONE
             )
         else:
             audit_logger.log_event(
                 "BROWSER_LAUNCH",
-                "Lancement de Microsoft Edge / Chromium via canal standard",
+                "Lancement de Chromium en mode universel / cloud",
                 {"session_dir": str(session_dir)}
             )
             try:
@@ -133,11 +129,12 @@ class StealthBrowser:
                     args=launch_args,
                     ignore_default_args=["--enable-automation"],
                     proxy=proxy_dict,
-                    no_viewport=True,
+                    viewport={"width": config.VIEWPORT_WIDTH, "height": config.VIEWPORT_HEIGHT},
                     locale=config.LOCALE,
                     timezone_id=config.TIMEZONE
                 )
             except Exception:
+                # Fallback standard Chromium sans canal spécifique
                 self.context = await self.playwright.chromium.launch_persistent_context(
                     user_data_dir=str(session_dir),
                     headless=config.HEADLESS,

@@ -1,12 +1,10 @@
 """
 Gestionnaire d'authentification fiable et transparent pour LinkedIn.
-Gère l'accès direct par session active, la connexion propre avec injection multi-cookies,
-la détection proactive des défis de sécurité (CAPTCHA / Checkpoint) avec guidage utilisateur en direct,
-et l'auto-sauvegarde du cookie li_at dans .env.
+Gère l'accès direct par session active, la connexion propre sans suppression de cookies,
+et l'auto-sauvegarde du cookie dans .env.
 """
 
 import asyncio
-import random
 from typing import Any, Callable, Optional, Tuple
 from playwright.async_api import BrowserContext, Page
 from config import config
@@ -39,13 +37,10 @@ class AuthManager:
         """
         try:
             current_url = page.url.lower()
-            # Si on est sur une URL de connexion ou de vérification, on n'est pas encore connecté
-            if any(bad in current_url for bad in ["/login", "/checkpoint", "/challenge", "/uas/authenticate", "/signup"]):
-                return False
-
             # Si on est sur le fil, le réseau, les messages, les emplois ou la recherche
             if any(path in current_url for path in ["/feed", "/mynetwork", "/jobs", "/search", "/messaging", "/in/"]):
-                return True
+                if not any(bad in current_url for bad in ["/login", "/checkpoint", "/uas/authenticate", "/signup"]):
+                    return True
 
             # Vérification des sélecteurs de l'interface connectée
             selectors = [
@@ -69,22 +64,6 @@ class AuthManager:
             pass
         return False
 
-    def is_checkpoint_or_captcha(self, current_url: str) -> bool:
-        """
-        Détecte si la page actuelle est un défi de sécurité ou CAPTCHA.
-        """
-        lower_url = current_url.lower()
-        checkpoint_signals = [
-            "/checkpoint/",
-            "/challenge/",
-            "security-verification",
-            "captcha",
-            "identity/challenge",
-            "checkpoint/challenge",
-            "arkose"
-        ]
-        return any(sig in lower_url for sig in checkpoint_signals)
-
     async def authenticate(
         self,
         context: BrowserContext,
@@ -94,7 +73,7 @@ class AuthManager:
         **kwargs
     ) -> bool:
         """
-        Stratégie d'authentification robuste sans blocage.
+        Stratégie d'authentification robuste sans suppression de cookies.
         """
         status_callback = kwargs.get("status_callback", None)
         if not status_callback and len(args) > 0:
@@ -110,7 +89,7 @@ class AuthManager:
         audit_logger.log_event("AUTH_START", "Vérification de la session LinkedIn...")
         notify("🔍 Vérification de votre session LinkedIn...")
 
-        # 1. Vérification si la session est déjà active (attente jusqu'à 5 secondes)
+        # 1. Vérification si la session est déjà active (attente jusqu'à 6 secondes)
         await self.safe_goto(page, "https://www.linkedin.com/feed/")
         
         for _ in range(3):
@@ -120,13 +99,13 @@ class AuthManager:
                 return True
             await asyncio.sleep(1.5)
 
-        # 2. Si un cookie existe dans .env, injection complète multi-domaines
+        # 2. Si un cookie existe dans .env, tentative d'injection propre
         li_at_val = cookie_manager.extract_li_at_value(config.LINKEDIN_COOKIE)
         if li_at_val:
-            notify("🔑 Injection du cookie de session existant...")
+            notify("🔑 Test du cookie de session existant...")
             try:
-                cookies_list = cookie_manager.format_playwright_cookies(li_at_val)
-                await context.add_cookies(cookies_list)
+                cookie_dict = cookie_manager.format_playwright_cookie(li_at_val)
+                await context.add_cookies([cookie_dict])
                 await self.safe_goto(page, "https://www.linkedin.com/feed/")
                 await asyncio.sleep(2)
 
@@ -134,34 +113,27 @@ class AuthManager:
                     audit_logger.log_event("AUTH_SUCCESS", "Connexion validée via le cookie !")
                     notify("✅ Connexion validée via le cookie !")
                     return True
-            except Exception as e:
-                audit_logger.log_event("AUTH_COOKIE_WARN", f"Erreur injection cookie : {e}")
+            except Exception:
+                pass
 
         # 3. Ouverture de la page de connexion LinkedIn
         audit_logger.log_event("AUTH_LEVEL_3", "Ouverture de la page de connexion LinkedIn.")
-        notify("👉 Connexion à LinkedIn en cours dans Edge...")
+        notify("👉 Connexion à LinkedIn en cours...")
         await self.safe_goto(page, "https://www.linkedin.com/login/fr")
         await asyncio.sleep(2)
 
-        # Pré-remplissage avec frappe humaine si identifiants configurés
+        # Pré-remplissage et soumission automatique si identifiants configurés
         if config.LINKEDIN_EMAIL and config.LINKEDIN_PASSWORD:
             try:
-                user_field = await page.wait_for_selector("#username, input[name='session_key']", timeout=6000)
+                user_field = await page.wait_for_selector("#username, input[name='session_key']", timeout=8000)
                 if user_field:
-                    notify("✍️ Saisie sécurisée de vos identifiants...")
-                    await user_field.click()
-                    await asyncio.sleep(0.3)
-                    # Saisie humaine caractère par caractère
-                    for char in config.LINKEDIN_EMAIL:
-                        await page.keyboard.type(char, delay=random.randint(50, 120))
-                    await asyncio.sleep(0.4)
+                    notify("🤖 Saisie automatique de vos identifiants...")
+                    await user_field.fill(config.LINKEDIN_EMAIL)
+                    await asyncio.sleep(0.5)
                     
                     pass_field = await page.wait_for_selector("#password, input[name='session_password']", timeout=5000)
                     if pass_field:
-                        await pass_field.click()
-                        await asyncio.sleep(0.3)
-                        for char in config.LINKEDIN_PASSWORD:
-                            await page.keyboard.type(char, delay=random.randint(50, 120))
+                        await pass_field.fill(config.LINKEDIN_PASSWORD)
                         await asyncio.sleep(0.5)
                         
                         submit_btn = await page.query_selector("button[type='submit'], button[data-litms-control-urn*='login']")
@@ -173,24 +145,16 @@ class AuthManager:
             except Exception as e:
                 audit_logger.log_event("AUTH_FILL_WARN", f"Saisie auto : {e}")
 
-        # 4. Surveillance continue en direct avec détection de CAPTCHA / Défi de sécurité
-        captcha_notified = False
-        for second in range(120):  # 120 x 1.5s = 180s (3 minutes)
-            await asyncio.sleep(1.5)
-            current_url = page.url.lower()
-
-            # Détection spécifique de CAPTCHA ou Checkpoint
-            if self.is_checkpoint_or_captcha(current_url):
-                if not captcha_notified:
-                    audit_logger.log_event("CAPTCHA_DETECTED", f"Défi de sécurité détecté : {current_url}")
-                    notify("⚠️ Vérification de sécurité / CAPTCHA détecté sur LinkedIn ! Veuillez le résoudre dans la fenêtre Edge ouverte...")
-                    captcha_notified = True
-
+        # Surveillance continue : courte en mode Cloud/Headless (6s) pour basculer vite sur X-Ray, plus longue en local avec interface (90s)
+        max_wait_iterations = 3 if getattr(config, "HEADLESS", False) or sys.platform != "win32" else 45
+        for second in range(max_wait_iterations):
+            await asyncio.sleep(2)
+            
             if await self.is_logged_in(page):
                 audit_logger.log_event("AUTH_SUCCESS", "Connexion validée avec succès !")
                 notify("🎉 Connexion validée ! Sauvegarde de la session...")
                 
-                # Sauvegarde du cookie li_at dans .env pour les prochaines sessions
+                # Sauvegarde du cookie li_at dans .env
                 try:
                     extracted = await cookie_manager.get_li_at_from_context(context)
                     if extracted:

@@ -1,1 +1,1 @@
-# Parsers module
+"""Parsers package."""

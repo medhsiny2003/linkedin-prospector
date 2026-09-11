@@ -1,96 +1,138 @@
-import unicodedata
+"""
+Générateur d'adresses emails basé sur 11 patterns et scoring probabiliste.
+Inclut la normalisation des noms français (accents, traits d'union) et
+la résolution automatique des domaines d'entreprises cibles (drones / aéronautique / robotique).
+"""
+
 import re
-from typing import List, Tuple
+import unicodedata
+from typing import Dict, List, Optional, Tuple
+from config import config
+
 
 class EmailGenerator:
-    """Generates 22 email permutations across Light, Medium, and Heavy tiers with confidence scores."""
+    def __init__(self):
+        self.known_domains = config.KNOWN_COMPANY_DOMAINS
+        self.patterns = config.EMAIL_PATTERNS
 
-    PATTERNS = {
-        'light': [
-            ('{first}.{last}@{domain}', 95),
-            ('{first}{last}@{domain}', 90),
-            ('{f}.{last}@{domain}', 85),
-            ('{first}.{l}@{domain}', 80),
-        ],
-        'medium': [
-            ('{first}.{last}@{domain}', 95),
-            ('{first}{last}@{domain}', 90),
-            ('{f}.{last}@{domain}', 85),
-            ('{first}.{l}@{domain}', 80),
-            ('{last}.{first}@{domain}', 70),
-            ('{first}_{last}@{domain}', 68),
-            ('{first}-{last}@{domain}', 65),
-            ('{f}{last}@{domain}', 63),
-            ('{first}{l}@{domain}', 60),
-            ('{last}{f}@{domain}', 58),
-            ('{l}.{first}@{domain}', 55),
-        ],
-        'heavy': [
-            ('{first}.{last}@{domain}', 95),
-            ('{first}{last}@{domain}', 90),
-            ('{f}.{last}@{domain}', 85),
-            ('{first}.{l}@{domain}', 80),
-            ('{last}.{first}@{domain}', 70),
-            ('{first}_{last}@{domain}', 68),
-            ('{first}-{last}@{domain}', 65),
-            ('{f}{last}@{domain}', 63),
-            ('{first}{l}@{domain}', 60),
-            ('{last}{f}@{domain}', 58),
-            ('{l}.{first}@{domain}', 55),
-            ('{first}@{domain}', 40),
-            ('{last}@{domain}', 38),
-            ('{l}{first}@{domain}', 35),
-            ('{last}_{f}@{domain}', 33),
-            ('{first}.{last}1@{domain}', 30),
-            ('{first}{last}1@{domain}', 28),
-            ('{first}.{last}.pro@{domain}', 25),
-            ('{f}_{last}@{domain}', 23),
-            ('{f}-{last}@{domain}', 22),
-            ('{first}{last}01@{domain}', 21),
-            ('{last}.{f}@{domain}', 20),
-        ]
-    }
+    @staticmethod
+    def strip_accents(text: str) -> str:
+        """Supprime les accents et caractères diacritiques (ex: 'Éléonore' -> 'Eleonore')."""
+        nfkd_form = unicodedata.normalize('NFKD', text)
+        return "".join([c for c in nfkd_form if not unicodedata.combining(c)])
 
-    def _normalize_name(self, name: str) -> str:
-        """Removes accents, lowercase, and non-alphanumeric characters."""
-        if not name:
-            return ""
-        name = ''.join(c for c in unicodedata.normalize('NFD', name) if unicodedata.category(c) != 'Mn')
-        name = name.lower().strip()
-        name = name.replace('-', '').replace(' ', '')
-        name = re.sub(r'[^a-z0-9]', '', name)
-        return name
+    @classmethod
+    def clean_name_part(cls, name_part: str) -> str:
+        """Nettoie et normalise un élément de nom (retrait des titres, caractères spéciaux)."""
+        cleaned = cls.strip_accents(name_part).lower().strip()
+        # Suppression des titres et civilités
+        cleaned = re.sub(r'^(dr|ing|mr|mme|mlle|prof|phd|msc)\.?\s+', '', cleaned)
+        # Ne garder que les caractères alphabétiques
+        cleaned = re.sub(r'[^a-z0-9\-]', '', cleaned)
+        return cleaned
 
-    def generate(self, first_name: str, last_name: str, domain: str, level: str = 'medium') -> List[Tuple[str, int]]:
-        """Generates sorted email permutations with confidence scores."""
-        norm_first = self._normalize_name(first_name)
-        norm_last = self._normalize_name(last_name)
-        domain = domain.lower().strip()
-        
-        if not norm_first or not norm_last or not domain:
+    def resolve_domain(self, company_name: str) -> str:
+        """
+        Détermine le nom de domaine internet le plus probable pour une entreprise donnée.
+        Vérifie d'abord le catalogue des domaines d'entreprises françaises connues.
+        """
+        clean_company = self.strip_accents(company_name).lower().strip()
+        # Retrait des formes juridiques et suffixes courants
+        clean_company_simple = re.sub(r'\b(sas|sa|sarl|group|groupe|france|defense|aerospace|robotics)\b', '', clean_company).strip()
+
+        from enricher.company_resolver import company_resolver
+        _, _, domain = company_resolver.resolve(company_name)
+        if domain and domain != "gmail.com":
+            return domain
+
+        # 1. Correspondance directe dans le dictionnaire des entreprises connues
+        for key, dom in self.known_domains.items():
+            if key in clean_company or clean_company in key or (clean_company_simple and key in clean_company_simple):
+                return dom
+
+        # 2. Heuristique de génération de domaine par défaut
+        # Remplace les espaces par rien ou tiret
+        slug = re.sub(r'[^a-z0-9]', '', clean_company_simple or clean_company)
+        if not slug:
+            slug = "entreprise"
+        return f"{slug}.com"
+
+    def generate_candidates(
+        self,
+        first_name: str,
+        last_name: str,
+        company_name: str
+    ) -> List[Dict[str, any]]:
+        """
+        Génère les 11 déclinaisons d'emails classées par priorité et score de confiance.
+        """
+        f_clean = self.clean_name_part(first_name)
+        l_clean = self.clean_name_part(last_name)
+        domain = self.resolve_domain(company_name)
+
+        if not f_clean or not l_clean:
             return []
 
-        f = norm_first[0] if norm_first else ""
-        l = norm_last[0] if norm_last else ""
-        
-        patterns = self.PATTERNS.get(level, self.PATTERNS['medium'])
-        
-        emails = []
-        seen = set()
-        for template, score in patterns:
-            email = template.format(first=norm_first, last=norm_last, f=f, l=l, domain=domain)
-            if email not in seen:
-                emails.append((email, score))
-                seen.add(email)
-                
-        return sorted(emails, key=lambda x: x[1], reverse=True)
+        f_single = f_clean.replace('-', '').replace(' ', '')
+        l_single = l_clean.replace('-', '').replace(' ', '')
 
-    def get_best_email(self, first_name: str, last_name: str, domain: str, level: str = 'medium') -> Tuple[str, int]:
-        """Returns the highest scored email candidate."""
-        emails = self.generate(first_name, last_name, domain, level)
-        return emails[0] if emails else ("", 0)
+        f_initial = f_clean[0]
+        l_initial = l_clean[0]
 
-    def get_top_n_emails(self, first_name: str, last_name: str, domain: str, n: int = 3, level: str = 'medium') -> List[Tuple[str, int]]:
-        """Returns the top N candidates by confidence score."""
-        emails = self.generate(first_name, last_name, domain, level)
-        return emails[:n]
+        # Variantes composées (ex: Jean-Marc -> jm, jean)
+        f_parts = [p for p in re.split(r'[\s\-]+', f_clean) if p]
+        compound_init = "".join([p[0] for p in f_parts]) if f_parts else f_initial
+        first_part = f_parts[0] if f_parts else f_single
+
+        candidates = []
+        for p in self.patterns:
+            template = p["pattern"]
+            email_str = template.format(
+                first=f_single,
+                last=l_single,
+                f=f_initial,
+                l=l_initial,
+                compound_init=compound_init,
+                first_part=first_part,
+                domain=domain,
+                num="1"
+            )
+            candidates.append({
+                "email": email_str,
+                "confidence": p["confidence"],
+                "priority": p.get("priority", 1),
+                "pattern": template,
+                "domain": domain
+            })
+
+        return candidates
+
+    def get_top_propositions(
+        self,
+        first_name: str,
+        last_name: str,
+        company_name: str
+    ) -> Dict[str, any]:
+        """
+        Retourne l'email principal (Top 1) et deux alternatives (Top 2 et Top 3).
+        """
+        candidates = self.generate_candidates(first_name, last_name, company_name)
+        if not candidates:
+            return {
+                "proposed_email": "",
+                "alt_email_1": "",
+                "alt_email_2": "",
+                "confidence_score": 0,
+                "domain": ""
+            }
+
+        return {
+            "proposed_email": candidates[0]["email"],
+            "alt_email_1": candidates[1]["email"] if len(candidates) > 1 else "",
+            "alt_email_2": candidates[2]["email"] if len(candidates) > 2 else "",
+            "confidence_score": candidates[0]["confidence"],
+            "domain": candidates[0]["domain"]
+        }
+
+
+email_generator = EmailGenerator()

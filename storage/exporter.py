@@ -1,197 +1,222 @@
-import os
-import csv
-import json
-import logging
-from typing import List, Dict, Any, Optional
-from datetime import datetime
-from openpyxl import Workbook
-from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+"""
+Générateur et exportateur de fichiers Excel professionnels (openpyxl).
+Produit le fichier 'contacts_stage.xlsx' avec mise en forme, colorations de statut,
+tri intelligent par entreprise/priorité et déduplication stricte.
+"""
+
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+import openpyxl
+from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils import get_column_letter
+from config import config
+from core.monitoring.audit_logger import audit_logger
+from enricher.lead_scorer import lead_scorer
+from storage.db_manager import db_manager
 
-logger = logging.getLogger(__name__)
 
-class Exporter:
-    """Handles exporting deduplicated prospects data to Excel, CSV, and JSON."""
+class ExcelExporter:
+    def __init__(self, output_path: Optional[Path] = None):
+        self.output_path = output_path or config.OUTPUT_EXCEL_PATH
+        self.history_path = self.output_path.parent / "contacts_historique.xlsx"
 
-    def __init__(self, output_dir: str = "output"):
-        self.output_dir = output_dir
-        os.makedirs(self.output_dir, exist_ok=True)
-
-    def _generate_filename(self, extension: str) -> str:
-        """Generates an automated timestamped filename."""
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M")
-        return os.path.join(self.output_dir, f"prospects_{timestamp}.{extension}")
-
-    def deduplicate_prospects(self, prospects: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def archive_current_session_file(self) -> None:
         """
-        Deduplicates prospects by (first_name, last_name, company).
-        Keeps only the record with the highest confidence score.
-        Merges alternative emails into email_alt1 / email_alt2 without creating duplicate rows.
+        Déplace l'actuel contacts_stage.xlsx vers contacts_historique.xlsx
+        au démarrage d'une nouvelle session, fusionne avec l'historique existant,
+        et réinitialise le fichier de session pour la nouvelle recherche.
         """
-        dedup_map: Dict[tuple, Dict[str, Any]] = {}
+        import shutil
+        data_dir = self.output_path.parent
+        data_dir.mkdir(parents=True, exist_ok=True)
+        main_path = self.output_path
+        history_path = self.history_path
 
-        for p in prospects:
-            fn = str(p.get('first_name', '')).strip().lower()
-            ln = str(p.get('last_name', '')).strip().lower()
-            comp = str(p.get('company', '')).strip().lower()
-
-            key = (fn, ln, comp)
-            score = int(p.get('confidence_score') or 0)
-
-            if key not in dedup_map:
-                dedup_map[key] = dict(p)
-            else:
-                existing = dedup_map[key]
-                existing_score = int(existing.get('confidence_score') or 0)
-
-                # Keep higher score as primary email
-                if score > existing_score:
-                    # Previous email becomes alternative
-                    if existing.get('email') and existing.get('email') != p.get('email'):
-                        p['email_alt1'] = existing.get('email')
-                    dedup_map[key] = dict(p)
+        if main_path.exists() and main_path.stat().st_size > 1000:
+            try:
+                # Si un historique existe déjà, on sauvegarde la base globale cumulée
+                all_leads = db_manager.get_all_leads()
+                if all_leads:
+                    self.export_leads(all_leads, destination=history_path)
                 else:
-                    # Current email becomes alternative if different
-                    if p.get('email') and p.get('email') != existing.get('email'):
-                        existing['email_alt1'] = p.get('email')
+                    shutil.copy2(str(main_path), str(history_path))
+                
+                audit_logger.log_event("SESSION_ARCHIVE", f"Session précédente archivée dans {history_path.name}")
+                
+                # Réinitialisation du fichier de session actuelle
+                self.export_leads([], destination=main_path)
+            except Exception as e:
+                audit_logger.log_event("SESSION_ARCHIVE_ERR", f"Erreur archivage : {e}")
 
-        return list(dedup_map.values())
-
-    def export_excel(self, prospects: List[Dict[str, Any]], output_path: Optional[str] = None) -> str:
+    def export_leads(self, leads: List[Dict[str, Any]], destination: Optional[Path] = None) -> Path:
         """
-        Exports deduplicated prospects to a professional multi-tab Excel workbook.
-        Sheet 1: Résumé & KPIs
-        Sheet 2: Prospects LinkedIn (No duplicates, highest score kept, alternative email column)
+        Génère ou met à jour immédiatement le fichier Excel avec une liste de leads (leads de session ou base complète).
+        Écrit sur disque de manière synchronisée et résistante aux coupures.
         """
-        deduped = self.deduplicate_prospects(prospects)
-        filepath = output_path or self._generate_filename("xlsx")
+        dest_path = destination or self.output_path
+        dest_path.parent.mkdir(parents=True, exist_ok=True)
 
-        wb = Workbook()
+        # 1. Déduplication en mémoire stricte sur (Nom, Prénom, Entreprise)
+        seen = set()
+        clean_leads: List[Dict[str, Any]] = []
+        for lead in leads:
+            fn = lead.get("first_name", "").strip().lower()
+            ln = lead.get("last_name", "").strip().lower()
+            comp = lead.get("company", "").strip().lower()
+            key = (fn, ln, comp)
+            if key not in seen and fn and ln:
+                seen.add(key)
+                score, etoiles, _ = lead_scorer.calculate_score(lead)
+                lead["priority_stars"] = etoiles
+                lead["relevance_score"] = score
+                clean_leads.append(lead)
 
-        # --- Sheet 1: KPIs ---
-        ws_kpi = wb.active
-        ws_kpi.title = "Résumé & KPIs"
+        # 2. Tri intelligent : d'abord par Entreprise, puis par Score de Pertinence décroissant
+        clean_leads.sort(key=lambda x: (x.get("company", "").upper(), -x.get("relevance_score", 0), -x.get("confidence_score", 0)))
 
-        total_contacts = len(deduped)
-        validated = sum(1 for p in deduped if str(p.get('mx_status', '')).lower() == 'valid')
-        validation_rate = (validated / total_contacts * 100) if total_contacts > 0 else 0
-        scores = [int(p.get('confidence_score') or 0) for p in deduped if p.get('confidence_score')]
-        avg_score = (sum(scores) / len(scores)) if scores else 0
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "Contacts Stage"
 
-        companies = {}
-        for p in deduped:
-            c = p.get('company', 'Inconnu')
-            companies[c] = companies.get(c, 0) + 1
-
-        header_font = Font(bold=True, color="FFFFFF", size=11)
-        header_fill = PatternFill(start_color="1F4E79", end_color="1F4E79", fill_type="solid")
-        title_font = Font(size=14, bold=True, color="1F4E79")
-        bold_font = Font(bold=True)
-
-        ws_kpi.cell(row=2, column=2, value="LinkedIn Prospector V3.2 — Tableau de Bord d'Extraction").font = title_font
-        ws_kpi.cell(row=4, column=2, value="Total Contacts Uniques :").font = bold_font
-        ws_kpi.cell(row=4, column=3, value=total_contacts)
-        ws_kpi.cell(row=5, column=2, value="Taux de Validation MX :").font = bold_font
-        ws_kpi.cell(row=5, column=3, value=f"{validation_rate:.1f}%")
-        ws_kpi.cell(row=6, column=2, value="Score Moyen de Confiance :").font = bold_font
-        ws_kpi.cell(row=6, column=3, value=f"{avg_score:.1f}%")
-
-        ws_kpi.cell(row=8, column=2, value="Répartition par Entreprise").font = Font(bold=True, size=12, color="1F4E79")
-        ws_kpi.cell(row=9, column=2, value="Entreprise").font = header_font
-        ws_kpi.cell(row=9, column=2).fill = header_fill
-        ws_kpi.cell(row=9, column=3, value="Nombre de Profils").font = header_font
-        ws_kpi.cell(row=9, column=3).fill = header_fill
-
-        curr_row = 10
-        for comp, cnt in sorted(companies.items(), key=lambda x: x[1], reverse=True):
-            ws_kpi.cell(row=curr_row, column=2, value=comp)
-            ws_kpi.cell(row=curr_row, column=3, value=cnt)
-            curr_row += 1
-
-        ws_kpi.column_dimensions['B'].width = 35
-        ws_kpi.column_dimensions['C'].width = 25
-
-        # --- Sheet 2: Prospects LinkedIn ---
-        ws_data = wb.create_sheet(title="Prospects LinkedIn")
-
+        # Définition des en-têtes
         headers = [
-            "ID", "Prénom", "Nom", "Poste", "Entreprise",
-            "Email Principal", "Score (%)", "Statut MX", "Email Alternatif",
-            "URL LinkedIn", "Date d'Extraction"
+            "Prénom",
+            "Nom",
+            "Poste",
+            "Entreprise",
+            "Priorité",
+            "Email (proposé)",
+            "Email (alternatif 1)",
+            "Email (alternatif 2)",
+            "Score de confiance",
+            "Statut",
+            "MX vérifié",
+            "URL LinkedIn",
+            "Mots-clés matchés"
         ]
 
-        for col_idx, h in enumerate(headers, 1):
-            cell = ws_data.cell(row=1, column=col_idx, value=h)
-            cell.font = header_font
+        # Styles
+        header_fill = PatternFill(start_color="1F4E79", end_color="1F4E79", fill_type="solid")
+        header_font = Font(name="Calibri", size=11, bold=True, color="FFFFFF")
+        center_align = Alignment(horizontal="center", vertical="center")
+        left_align = Alignment(horizontal="left", vertical="center")
+
+        thin_border = Border(
+            left=Side(style="thin", color="D9D9D9"),
+            right=Side(style="thin", color="D9D9D9"),
+            top=Side(style="thin", color="D9D9D9"),
+            bottom=Side(style="thin", color="D9D9D9")
+        )
+
+        fill_valide = PatternFill(start_color="E2EFDA", end_color="E2EFDA", fill_type="solid")     # Vert clair
+        fill_non_verif = PatternFill(start_color="FCE4D6", end_color="FCE4D6", fill_type="solid")  # Rouge/Orange clair
+        fill_a_verifier = PatternFill(start_color="FFF2CC", end_color="FFF2CC", fill_type="solid") # Jaune clair
+
+        # Écriture de la ligne d'en-tête
+        ws.append(headers)
+        for col_num, _ in enumerate(headers, 1):
+            cell = ws.cell(row=1, column=col_num)
             cell.fill = header_fill
-            cell.alignment = Alignment(horizontal="center", vertical="center")
+            cell.font = header_font
+            cell.alignment = center_align
 
-        ws_data.freeze_panes = "A2"
-        ws_data.auto_filter.ref = f"A1:{get_column_letter(len(headers))}{len(deduped) + 1}"
+        # Écriture des données nettoyées et triées
+        for row_idx, lead in enumerate(clean_leads, start=2):
+            score_str = f"{lead.get('confidence_score', 0)}%"
+            row_values = [
+                lead.get("first_name", ""),
+                lead.get("last_name", ""),
+                lead.get("job_title", ""),
+                lead.get("company", ""),
+                lead.get("priority_stars", "★☆☆"),
+                lead.get("proposed_email", ""),
+                lead.get("alt_email_1", ""),
+                lead.get("alt_email_2", ""),
+                score_str,
+                lead.get("status", "À vérifier"),
+                lead.get("mx_verified", "Non"),
+                lead.get("profile_url", ""),
+                lead.get("matched_keywords", "")
+            ]
+            ws.append(row_values)
 
-        green_fill = PatternFill(start_color="C6EFCE", end_color="C6EFCE", fill_type="solid")
-        yellow_fill = PatternFill(start_color="FFEB9C", end_color="FFEB9C", fill_type="solid")
-        red_fill = PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid")
+            # Application des bordures et colorations conditionnelles
+            status_val = str(lead.get("status", ""))
+            for col_num in range(1, len(headers) + 1):
+                cell = ws.cell(row=row_idx, column=col_num)
+                cell.border = thin_border
+                cell.alignment = center_align if col_num in (5, 9, 10, 11) else left_align
 
-        for row_idx, p in enumerate(deduped, 2):
-            score_val = int(p.get('confidence_score') or 0)
-            alt_emails = p.get('email_alt1') or p.get('email_alt2') or ''
+                if col_num == 10:  # Colonne Statut
+                    if status_val.startswith("Validé"):
+                        cell.fill = fill_valide
+                    elif "Non vérifiable" in status_val or "Invalide" in status_val:
+                        cell.fill = fill_non_verif
+                    elif "À vérifier" in status_val:
+                        cell.fill = fill_a_verifier
 
-            ws_data.cell(row=row_idx, column=1, value=p.get('id', row_idx - 1))
-            ws_data.cell(row=row_idx, column=2, value=p.get('first_name', ''))
-            ws_data.cell(row=row_idx, column=3, value=p.get('last_name', ''))
-            ws_data.cell(row=row_idx, column=4, value=p.get('title', ''))
-            ws_data.cell(row=row_idx, column=5, value=p.get('company', ''))
-            ws_data.cell(row=row_idx, column=6, value=p.get('email', ''))
+        # Ajustement automatique de la largeur des colonnes
+        for col in ws.columns:
+            max_len = 0
+            col_letter = get_column_letter(col[0].column)
+            for cell in col:
+                val_str = str(cell.value or "")
+                if len(val_str) > max_len:
+                    max_len = len(val_str)
+            ws.column_dimensions[col_letter].width = max(max_len + 3, 12)
 
-            score_cell = ws_data.cell(row=row_idx, column=7, value=score_val)
-            if score_val >= 80:
-                score_cell.fill = green_fill
-            elif score_val >= 50:
-                score_cell.fill = yellow_fill
-            else:
-                score_cell.fill = red_fill
+        # Figer la ligne supérieure et activer les filtres automatiques
+        ws.freeze_panes = "A2"
+        ws.auto_filter.ref = ws.dimensions
 
-            ws_data.cell(row=row_idx, column=8, value=p.get('mx_status', ''))
-            ws_data.cell(row=row_idx, column=9, value=alt_emails)
-            ws_data.cell(row=row_idx, column=10, value=p.get('linkedin_url', ''))
-            ws_data.cell(row=row_idx, column=11, value=str(p.get('extraction_date', '')))
+        wb.save(str(dest_path))
+        audit_logger.log_event("EXCEL_EXPORT", f"Exportation de {len(clean_leads)} leads nettoyés dans {dest_path}")
+        return dest_path
 
-        # Adjust column widths
-        for col in ws_data.columns:
-            max_len = max(len(str(cell.value or '')) for cell in col)
-            col_letter = col[0].column_letter
-            ws_data.column_dimensions[col_letter].width = max(max_len + 3, 12)
+    def export_from_db(self, destination: Optional[Path] = None, db: Optional[Any] = None) -> Path:
+        """Exporte tous les leads de la base de données vers le fichier Excel."""
+        target_db = db or db_manager
+        raw_leads = target_db.get_all_leads()
+        return self.export_leads(raw_leads, destination=destination)
 
-        wb.save(filepath)
-        logger.info(f"Export Excel dédoublonné sauvegardé dans {filepath} ({total_contacts} profils uniques)")
-        return filepath
+    @staticmethod
+    def list_export_history() -> List[Dict[str, Any]]:
+        """
+        Retourne l'archive globale et de la session précédente avec leurs métadonnées.
+        """
+        from datetime import datetime
+        results = []
+        data_dir = getattr(config, "DATA_DIR", config.OUTPUT_EXCEL_PATH.parent)
+        
+        hist_path = data_dir / "contacts_historique.xlsx"
+        if hist_path.exists() and hist_path.stat().st_size > 0:
+            try:
+                stat = hist_path.stat()
+                dt = datetime.fromtimestamp(stat.st_mtime).strftime("%d/%m/%Y %H:%M")
+                results.append({
+                    "filename": "contacts_historique.xlsx (Base Cumulée)",
+                    "filepath": str(hist_path),
+                    "size_kb": round(stat.st_size / 1024, 1),
+                    "date": dt
+                })
+            except Exception:
+                pass
 
-    def export(self, prospects: List[Dict[str, Any]], output_path: Optional[str] = None) -> str:
-        """Compatibility alias for export_excel."""
-        return self.export_excel(prospects, output_path=output_path)
+        archive_path = config.EXPORTS_DIR / "contacts_session_precedente.xlsx"
+        if archive_path.exists() and archive_path.stat().st_size > 0:
+            try:
+                stat = archive_path.stat()
+                dt = datetime.fromtimestamp(stat.st_mtime).strftime("%d/%m/%Y %H:%M")
+                results.append({
+                    "filename": "contacts_session_precedente.xlsx",
+                    "filepath": str(archive_path),
+                    "size_kb": round(stat.st_size / 1024, 1),
+                    "date": dt
+                })
+            except Exception:
+                pass
 
-    def export_csv(self, prospects: List[Dict[str, Any]], output_path: Optional[str] = None) -> str:
-        """Exports deduplicated prospects to a CSV file."""
-        deduped = self.deduplicate_prospects(prospects)
-        filepath = output_path or self._generate_filename("csv")
-        if not deduped:
-            return filepath
+        return results
 
-        keys = ["id", "first_name", "last_name", "title", "company", "email", "confidence_score", "mx_status", "email_alt1", "linkedin_url", "extraction_date"]
-        with open(filepath, 'w', newline='', encoding='utf-8') as f:
-            writer = csv.DictWriter(f, fieldnames=keys, extrasaction='ignore')
-            writer.writeheader()
-            writer.writerows(deduped)
 
-        return filepath
-
-    def export_json(self, prospects: List[Dict[str, Any]], output_path: Optional[str] = None) -> str:
-        """Exports deduplicated prospects to JSON."""
-        deduped = self.deduplicate_prospects(prospects)
-        filepath = output_path or self._generate_filename("json")
-        with open(filepath, 'w', encoding='utf-8') as f:
-            json.dump(deduped, f, indent=2, ensure_ascii=False)
-        return filepath
-
-ExcelExporter = Exporter
+excel_exporter = ExcelExporter()
